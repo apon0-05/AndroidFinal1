@@ -100,7 +100,7 @@ fun Top(onSkipClicked: () -> Unit) {
     }
 }
 
-// Содержимое первого экрана онбординга
+
 @Composable
 fun onboardingScreen1() {
     Column(
@@ -113,7 +113,7 @@ fun onboardingScreen1() {
     }
 }
 
-// Содержимое второго экрана онбординга
+
 @Composable
 fun onboardingScreen2() {
     Column(
@@ -126,7 +126,7 @@ fun onboardingScreen2() {
     }
 }
 
-// Содержимое третьего экрана онбординга
+
 @Composable
 fun onboardingScreen3() {
     Column(
@@ -139,7 +139,7 @@ fun onboardingScreen3() {
     }
 }
 
-// Компонент для отображения изображения и текста на экране
+
 @Composable
 fun Body(img: Int, text: String) {
     Spacer(modifier = Modifier.height(166.dp))
@@ -164,21 +164,20 @@ fun Body(img: Int, text: String) {
         )
     }
 }
-// Превью для экрана онбординга 1
+
 @Preview(showBackground = true)
 @Composable
 fun OnboardingPreview1() {
     onboardingScreen1()
 }
 
-// Превью для экрана онбординга 2
 @Preview(showBackground = true)
 @Composable
 fun OnboardingPreview2() {
     onboardingScreen2()
 }
 
-// Превью для экрана онбординга 3
+
 @Preview(showBackground = true)
 @Composable
 fun OnboardingPreview3() {
