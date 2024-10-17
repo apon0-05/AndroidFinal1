@@ -62,7 +62,23 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             AndroidFinal1Theme {
-                whatis()
+               // whatis()
+
+                val navController = rememberNavController()
+
+                Scaffold(
+                    bottomBar = { BottomNavigationBar(navController)}
+                ) { innerPadding ->
+                    NavHost(
+                        navController = navController,
+                        startDestination = Screen.Home.route,
+                        Modifier.padding(innerPadding)
+                    ) {
+                        composable(Screen.Home.route) { newHomePage(navController) }
+                        composable(Screen.Search.route) { SearchPage(navController) }
+                        composable(Screen.Profile.route) { ProfilePage(navController) }
+                    }
+                }
             }
         }
     }
@@ -99,7 +115,6 @@ fun newHomePage(navController: NavController){
             modifier = Modifier
                 .padding(top = 150.dp, start = 20.dp)
                 .weight(1f)
-               // .fillMaxSize()
         ) {
 
             LazyColumn(
@@ -107,7 +122,9 @@ fun newHomePage(navController: NavController){
             ) {
                 items(items = lgenre) { item ->
                     Row(
-                        modifier = Modifier.fillMaxWidth().padding(end = 20.dp, bottom = 15.dp),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(end = 20.dp, bottom = 15.dp),
                         horizontalArrangement = Arrangement.SpaceBetween
 
                     ) {
@@ -128,68 +145,6 @@ fun newHomePage(navController: NavController){
             }
         }
 
-        // Non-scrollable navigation row at the bottom
-//        Box(
-//            modifier = Modifier
-//                .size(400.dp, 60.dp)
-//                .background(
-//                    Color(0x3D3BFF).copy(alpha = 0.03f),
-//                    shape = RoundedCornerShape(16.dp)),
-//            contentAlignment = Alignment.Center
-//
-//        ) {
-//            Box(
-//                modifier = Modifier
-//                    .size(400.dp, 60.dp)
-//                    .padding(top = 3.dp)
-//                    .background(Color.White, shape = RoundedCornerShape(16.dp)),
-//                contentAlignment = Alignment.Center
-//            ){
-
-//                Row(
-//                    modifier = Modifier
-//                        .fillMaxWidth(),
-//                    horizontalArrangement = Arrangement.SpaceEvenly
-//
-//                ) {
-//                    Box(
-//                        modifier = Modifier.size(20.dp)
-//                    ) {
-//                        Image(
-//                            painter = painterResource(R.drawable.home),
-//                            contentDescription = null,
-//                            modifier = Modifier.fillMaxSize()
-//
-//                        )
-//
-//                    }
-//
-//                    Box(
-//                        modifier = Modifier.size(20.dp)
-//                    ) {
-//                        Image(
-//                            painter = painterResource(R.drawable.search),
-//                            contentDescription = null,
-//                            modifier = Modifier.fillMaxSize()
-//                        )
-//                    }
-//                    Box(
-//                        modifier = Modifier.size(20.dp)
-//                    ) {
-//                        Image(
-//                            painter = painterResource(R.drawable.profile),
-//                            contentDescription = null,
-//                            modifier = Modifier.fillMaxSize()
-//                        )
-//
-//                    }
-//
-//                }
-
-
-          //  }
-
-       // }
     }
 }
 
@@ -203,7 +158,8 @@ fun ItemView(
     Box(){
         if(isLastItem){
             Box(
-                modifier = Modifier.size(width = 130.dp, height = 194.dp)
+                modifier = Modifier
+                    .size(width = 130.dp, height = 194.dp)
                     .background(
                         color = Color(0x66B5B5C9),
                         shape = RoundedCornerShape(
@@ -211,7 +167,8 @@ fun ItemView(
                             topEnd = 4.dp,
                             bottomEnd = 4.dp,
                             bottomStart = 4.dp
-                        ))
+                        )
+                    )
                     .clip(RoundedCornerShape(10.dp)),
             ){
                 Column(
@@ -257,7 +214,8 @@ fun ItemView(
                                 topEnd = 4.dp,
                                 bottomEnd = 4.dp,
                                 bottomStart = 4.dp
-                            ))
+                            )
+                        )
                         .clip(RoundedCornerShape(10.dp))
                         .clickable {
                             //action
@@ -295,12 +253,8 @@ data class Films(
     val image: String,
     val name: String,
     val genre: String,
-
-
 )
-data class Title(
-    val title: String
-)
+
 
 val list = listOf(
     Films(4.3, "image", "Avatar", "drama",)
@@ -322,3 +276,54 @@ fun SearchPage(navController: NavController){
 fun ProfilePage(navController: NavController){
 
 }
+
+
+@Composable
+fun BottomNavigationBar(navController: NavController) {
+
+        Box(
+            modifier = Modifier
+                .size(400.dp, 90.dp)
+                .padding(top = 3.dp)
+                .background(Color.White, shape = RoundedCornerShape(16.dp)),
+            contentAlignment = Alignment.Center
+        ) {
+
+            NavigationBar(
+                modifier = Modifier.padding(horizontal = 35.dp),
+                containerColor = Color.Transparent,
+                tonalElevation = 5.dp,
+            ) {
+                val items = listOf(Screen.Home, Screen.Search, Screen.Profile)
+                val currentRoute = navController.currentBackStackEntry?.destination?.route
+
+
+                items.forEach { screen ->
+                    val isSelected = currentRoute == screen.route
+
+                    NavigationBarItem(
+                        icon = {
+                            Icon(
+                                painter = painterResource(id = screen.icon),
+                                contentDescription = screen.route,
+                                modifier = Modifier.size(24.dp),
+                                tint = if (isSelected) Color.Blue else Color.Gray
+                            )
+                        },
+                        selected = isSelected,
+                        onClick = {
+                            if(!isSelected) {
+                                navController.navigate(screen.route){
+                                    launchSingleTop = true
+                                }
+                            }
+                        },
+                        colors = NavigationBarItemDefaults.colors(
+                            selectedIconColor = Color.Blue,
+                            unselectedIconColor = Color.Gray
+                        )
+                    )
+                }
+            }
+        }
+    }
