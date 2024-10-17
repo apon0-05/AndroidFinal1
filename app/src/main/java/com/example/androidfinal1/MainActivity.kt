@@ -90,6 +90,7 @@ fun whatis(){
     newHomePage(navController)
 }
 
+
 @Composable
 fun newHomePage(navController: NavController){
     val list = listOf(
