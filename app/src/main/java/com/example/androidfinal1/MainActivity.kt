@@ -1,8 +1,5 @@
 package com.example.androidfinal1
 
-import android.app.AlertDialog
-import android.content.Context
-import android.net.ConnectivityManager
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -51,13 +48,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.content.ContextCompat.getSystemService
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.androidfinal1.presentation.profile.ProfilePage
-import com.example.androidfinal1.presentation.search.SearchPage
 import com.example.androidfinal1.ui.theme.AndroidFinal1Theme
 
 
@@ -66,9 +60,10 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-
         setContent {
             AndroidFinal1Theme {
+               // whatis()
+
                 val navController = rememberNavController()
 
                 Scaffold(
@@ -87,6 +82,12 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
+}
+@Preview(showBackground = true)
+@Composable
+fun whatis(){
+    val navController = rememberNavController()
+    newHomePage(navController)
 }
 
 
@@ -121,7 +122,6 @@ fun newHomePage(navController: NavController){
                 verticalArrangement = Arrangement.spacedBy(25.dp)
             ) {
                 items(items = lgenre) { item ->
-
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -139,6 +139,7 @@ fun newHomePage(navController: NavController){
                         itemsIndexed(items = list) { index, item ->
                             val isLastItem = index == list.lastIndex
                             ItemView(item = item, isLastItem = isLastItem)
+
                         }
                     }
                 }
@@ -147,6 +148,7 @@ fun newHomePage(navController: NavController){
 
     }
 }
+
 
 
 @Composable
@@ -247,8 +249,6 @@ fun ItemView(
     }
 
 }
-
-
 data class Films(
     val rating: Double,
     val image: String,
@@ -262,10 +262,20 @@ val list = listOf(
 )
 
 
-sealed class Screen(val route: String, val icon: Int){
-    data object Home: Screen("home", R.drawable.home)
-    data object Search: Screen("search", R.drawable.search)
-    data object Profile: Screen("profile", R.drawable.profile)
+//sealed class Screen(val route: String, val icon: Int){
+//    object Home: Screen("home", R.drawable.home)
+//    object Search: Screen("search", R.drawable.search)
+//    object Profile: Screen("profile", R.drawable.profile)
+//}
+
+@Composable
+fun SearchPage(navController: NavController){
+
+}
+
+@Composable
+fun ProfilePage(navController: NavController){
+
 }
 
 
@@ -287,6 +297,7 @@ fun BottomNavigationBar(navController: NavController) {
             ) {
                 val items = listOf(Screen.Home, Screen.Search, Screen.Profile)
                 val currentRoute = navController.currentBackStackEntry?.destination?.route
+
 
                 items.forEach { screen ->
                     val isSelected = currentRoute == screen.route
@@ -317,5 +328,3 @@ fun BottomNavigationBar(navController: NavController) {
             }
         }
     }
-
-
