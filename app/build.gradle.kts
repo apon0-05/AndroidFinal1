@@ -73,4 +73,20 @@ dependencies {
     implementation(libs.ui)
     implementation(libs.material3)
 
+    implementation("io.arrow-kt:arrow-core:1.0.1")
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+    implementation("io.coil-kt:coil-compose:2.0.0")
+
+    implementation("com.google.dagger:hilt-android:2.46.1")
+//    kapt("com.google.dagger:hilt-android-compiler:2.46.1")
+
+    // Use the merged ViewModel dependency
+    implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
+
+    // Kotlin Coroutines dependencies
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4")
+
+
 }
