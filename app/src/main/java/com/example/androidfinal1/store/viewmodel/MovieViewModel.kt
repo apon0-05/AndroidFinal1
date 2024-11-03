@@ -3,6 +3,8 @@ package com.example.androidfinal1.store.viewmodel
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.androidfinal1.store.data.KinopoiskApi
+import com.example.androidfinal1.store.data.Movie
 import com.example.androidfinal1.store.data.remote.KinopoiskApi
 import com.example.androidfinal1.store.data.remote.Movie
 import kotlinx.coroutines.flow.MutableStateFlow
