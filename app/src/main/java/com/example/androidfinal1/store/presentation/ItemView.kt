@@ -21,7 +21,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberImagePainter
 import com.example.androidfinal1.store.data.Movie
-import com.example.androidfinal1.store.data.remote.Movie
+//import com.example.androidfinal1.store.data.remote.Movie
 
 @Composable
 fun ItemView(

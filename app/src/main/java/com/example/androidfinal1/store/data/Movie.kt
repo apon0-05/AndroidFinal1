@@ -21,3 +21,4 @@ data class PremieresResponse(
 data class ZombieResponse(
     @SerializedName("items") val movies: List<Movie>
 )
+

@@ -1,12 +1,12 @@
-package com.example.androidfinal1.store.viewmodel
+package com.example.androidfinal1.store.presentation.viewmodel
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.androidfinal1.store.data.KinopoiskApi
 import com.example.androidfinal1.store.data.Movie
-import com.example.androidfinal1.store.data.remote.KinopoiskApi
-import com.example.androidfinal1.store.data.remote.Movie
+//import com.example.androidfinal1.store.data.remote.KinopoiskApi
+//import com.example.androidfinal1.store.data.remote.Movie
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -64,7 +64,8 @@ class MoviesViewModel : ViewModel() {
         try{
             val response = KinopoiskApi.retrofitService.getCollections(type, page)
             if(response.isSuccessful){
-                _popularMoviesState.value = ScreenState.Success(response.body()?.movies ?: emptyList())
+                _popularMoviesState.value =
+                    ScreenState.Success(response.body()?.movies ?: emptyList())
             }
             else{
                 _popularMoviesState.value = ScreenState.Error("Failed to fetch premieres")
@@ -80,7 +81,8 @@ class MoviesViewModel : ViewModel() {
         try{
             val response = KinopoiskApi.retrofitService.getZombie()
             if(response.isSuccessful){
-                _zombieMoviesState.value = ScreenState.Success(response.body()?.movies ?: emptyList())
+                _zombieMoviesState.value =
+                    ScreenState.Success(response.body()?.movies ?: emptyList())
             }
             else{
                 _zombieMoviesState.value = ScreenState.Error("Failed to fetch premieres")

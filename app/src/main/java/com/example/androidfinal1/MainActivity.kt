@@ -18,7 +18,7 @@ import com.example.androidfinal1.store.presentation.BottomNavigationBar
 import com.example.androidfinal1.store.presentation.CategoryScreen
 import com.example.androidfinal1.store.presentation.NewHomePage
 import com.example.androidfinal1.store.presentation.Screen
-import com.example.androidfinal1.store.viewmodel.MoviesViewModel
+import com.example.androidfinal1.store.presentation.viewmodel.MoviesViewModel
 import com.example.androidfinal1.ui.theme.AndroidFinal1Theme
 
 class MainActivity : ComponentActivity() {

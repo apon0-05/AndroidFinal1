@@ -13,7 +13,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.androidfinal1.store.viewmodel.MoviesViewModel
+import com.example.androidfinal1.store.presentation.viewmodel.MoviesViewModel
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -31,8 +31,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.androidfinal1.R
-import com.example.androidfinal1.store.data.remote.Movie
-import com.example.androidfinal1.store.viewmodel.ScreenState
+//import com.example.androidfinal1.store.data.remote.Movie
+import com.example.androidfinal1.store.presentation.viewmodel.ScreenState
 
 
 @SuppressLint("UnrememberedMutableState")

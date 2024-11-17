@@ -2,8 +2,8 @@ package com.example.androidfinal1.store.domain.repository
 
 import com.example.androidfinal1.store.data.KinopoiskApi
 import com.example.androidfinal1.store.data.Movie
-import com.example.androidfinal1.store.data.remote.KinopoiskApi
-import com.example.androidfinal1.store.data.remote.Movie
+//import com.example.androidfinal1.store.data.remote.KinopoiskApi
+//import com.example.androidfinal1.store.data.remote.Movie
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

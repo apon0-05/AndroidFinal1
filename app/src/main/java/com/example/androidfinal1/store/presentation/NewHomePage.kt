@@ -34,9 +34,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.example.androidfinal1.store.viewmodel.MoviesViewModel
+import com.example.androidfinal1.store.presentation.viewmodel.MoviesViewModel
 import com.example.androidfinal1.R
-import com.example.androidfinal1.store.viewmodel.ScreenState
+import com.example.androidfinal1.store.presentation.viewmodel.ScreenState
 
 
 @Composable
