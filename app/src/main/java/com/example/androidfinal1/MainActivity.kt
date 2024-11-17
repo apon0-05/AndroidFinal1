@@ -9,13 +9,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.androidfinal1.store.presentation.BottomNavigationBar
 import com.example.androidfinal1.store.presentation.CategoryScreen
+import com.example.androidfinal1.store.presentation.FilmDetailPage
 import com.example.androidfinal1.store.presentation.NewHomePage
 import com.example.androidfinal1.store.presentation.Screen
 import com.example.androidfinal1.store.viewmodel.MoviesViewModel
@@ -46,6 +46,12 @@ class MainActivity : ComponentActivity() {
                             if (categoryIndex != null) {
                                 CategoryScreen(categoryIndex = categoryIndex, navController)
                             }
+                        }
+                        composable("filmDetail/{id}") { backStackEntry ->
+                            val movieId = backStackEntry.arguments?.getString("id")?.toIntOrNull()
+                                FilmDetailPage(movieId = movieId,  navController)
+
+
                         }
                         composable(Screen.Search.route) { SearchPage(navController) }
                         composable(Screen.Profile.route) { ProfilePage(navController) }

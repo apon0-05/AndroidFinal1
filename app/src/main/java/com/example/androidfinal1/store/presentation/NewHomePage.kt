@@ -101,7 +101,14 @@ fun NewHomePage(viewModel: MoviesViewModel, navController: NavController) {
                                     LazyRow(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
                                         Log.d("Loh", state.movies.size.toString())
                                         items(state.movies.take(8)) { movie ->
-                                            ItemView(movie = movie)
+                                           // Log.d("MovieDebug", "Movie ID before click: ${movie.id}")
+                                            ItemView(movie = movie
+                                                , onClick = {
+                                                id ->
+                                                Log.d("MovieClick", "Clicked movie ID: ${movie.id}")
+                                                // Переход на экран с деталями фильма, передавая ID фильма
+                                                  navController.navigate("filmDetail/${movie.id}")
+                                            })
                                         }
                                         item {
                                             AllShowButton {
@@ -122,6 +129,8 @@ fun NewHomePage(viewModel: MoviesViewModel, navController: NavController) {
                             }
 
                             ScreenState.Initial -> Unit
+
+                            else -> {}
                         }
                     }
                 }

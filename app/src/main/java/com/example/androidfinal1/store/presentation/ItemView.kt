@@ -24,18 +24,26 @@ import com.example.androidfinal1.store.data.remote.Movie
 
 @Composable
 fun ItemView(
-    movie: Movie
+    movie: Movie,
+    //onItemClick: (String) -> Unit,
+    onClick: (Int) -> Unit
     //isLastItem: Boolean,
+
 ) {
-    Box() {
-        Column {
+    Box(
+        modifier = Modifier
+       //     .clickable { onItemClick(movie.id.toString()) }
+    ) {
+        Column(
+            modifier = Modifier.clickable { movie.id?.let { onClick(it) } }
+        ) {
             // Main image with poster URL
             movie.posterUrl?.let { posterUrl ->
                 Box(
                     modifier = Modifier
                         .size(width = 130.dp, height = 194.dp)
                         .clip(RoundedCornerShape(10.dp))
-                        .clickable { /* action */ }
+                        .clickable { movie.id?.let { onClick(it)} /* action */ } //movie.id?.let { onClick(it)}
 
                 ) {
                     Image(

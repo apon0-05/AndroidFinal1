@@ -1,6 +1,7 @@
 package com.example.androidfinal1.store.presentation
 
 import android.annotation.SuppressLint
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -84,7 +85,13 @@ fun CategoryScreen(categoryIndex: Int, navController: NavController) {
                     horizontalArrangement = Arrangement.spacedBy(10.dp)
                 ) {
                     items((state as ScreenState.Success).movies.take(40)) { movie ->
+                        Log.d("MovieDebug", "Movie ID before click: ${movie.id}")
                         ItemView(movie)
+                        { id ->
+                            Log.d("MovieClick", "Clicked movie ID: ${movie.id}")
+                            // Переход на экран с деталями фильма, передавая ID фильма
+                            navController.navigate("filmDetail/${movie.id}")
+                        }
                     }
                 }
             }
@@ -97,6 +104,8 @@ fun CategoryScreen(categoryIndex: Int, navController: NavController) {
                 )
             }
             ScreenState.Initial -> Unit
+
+            else -> {}
         }
     }
 }
