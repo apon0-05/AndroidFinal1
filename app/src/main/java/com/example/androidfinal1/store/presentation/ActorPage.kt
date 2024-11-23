@@ -110,7 +110,7 @@ fun ActorPage(actorId: Int?, navController: NavController) {
                     SecTitle("Лучшее", "Все", "", navController, actor.personId)
                     Log.d("FetchMovies", "Movies fetched: ${movies.value.size}")
 
-                    // Display the LazyRow of movies
+
                     if (movies.value.isEmpty()) {
                         Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
                             CircularProgressIndicator(modifier = Modifier.padding(16.dp))
@@ -131,7 +131,6 @@ fun ActorPage(actorId: Int?, navController: NavController) {
                         }
                     }
 
-                    // Display Filmography section
                     SecTitle("Фильмография", "К списку", "44 фильма", navController, actor.personId)
                 }
             }
@@ -142,7 +141,6 @@ fun ActorPage(actorId: Int?, navController: NavController) {
         }
 
         else -> {
-            // Handle other states if necessary
         }
     }
 }
@@ -162,7 +160,7 @@ fun MovieItem1(
         Column(
             modifier = Modifier.clickable {  onClick()  }
         ) {
-            // Main image with poster URL
+
             movie.posterUrl?.let { posterUrl ->
                 Box(
                     modifier = Modifier
@@ -181,16 +179,16 @@ fun MovieItem1(
                         modifier = Modifier
                             .align(Alignment.TopEnd)
                             .padding(8.dp)
-                            .size(width = 24.dp, height = 16.dp) // Set background size
+                            .size(width = 24.dp, height = 16.dp)
                             .background(
                                 Color.Blue,
                                 RoundedCornerShape(4.dp)
-                            ), // Background color and rounded corners
-                        contentAlignment = Alignment.Center // Center text within the box
+                            ),
+                        contentAlignment = Alignment.Center
                     ) {
                         Text(
                             text = movie.rating?.toString() ?: "0.0",
-                            fontSize = 9.sp, // Adjust font size for better fit
+                            fontSize = 9.sp,
                             color = Color.White,
                         )
                     }
@@ -201,8 +199,8 @@ fun MovieItem1(
                 text = movie.nameRu ?: "",
                 fontSize = 20.sp,
                 color = Color.Black,
-                maxLines = 2, // Limit the text to two lines
-                overflow = TextOverflow.Ellipsis, // Add "..." if the text exceeds the max lines
+                maxLines = 2,
+                overflow = TextOverflow.Ellipsis,
                 modifier = Modifier
                     .width(130.dp)
                     .padding(top = 5.dp)
@@ -212,21 +210,17 @@ fun MovieItem1(
                 text = movie.genres.joinToString { it.name },
                 fontSize = 15.sp,
                 color = Color.Gray,
-                maxLines = 2, // Limit the text to two lines
-                overflow = TextOverflow.Ellipsis, // Add "..." if the text exceeds the max lines
+                maxLines = 2,
+                overflow = TextOverflow.Ellipsis,
                 modifier = Modifier
                     .width(130.dp)
 
             )
 
-            // Title and genres below the image
+
         }
 
-        // }
-
     }
-
-
 }
 
 
@@ -259,7 +253,7 @@ fun SecTitle(title: String, text: String, filmCount: String, navController: NavC
                 Text(
                     text = text,
                     fontSize = 14.sp,
-                    color = Color.Black // Некликабельный текст другого цвета
+                    color = Color.Black
                 )
             }
             Image(

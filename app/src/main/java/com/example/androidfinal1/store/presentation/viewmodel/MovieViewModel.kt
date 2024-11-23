@@ -179,8 +179,6 @@ class MoviesViewModel : ViewModel() {
 
 
     fun getFilmDetails(movieId: Int)  {
-        // Здесь делаем запрос к API и обновляем состояние
-        // Пример:
         viewModelScope.launch {
             _filmDetailsState.value = ScreenState.FilmLoading
             try {
@@ -221,7 +219,7 @@ class MoviesViewModel : ViewModel() {
         return if (currentState is ScreenState.ImageSuccess) {
             currentState.images.size
         } else {
-            0 // Возвращаем 0, если состояние еще не успешно
+            0
         }
     }
 
@@ -242,26 +240,23 @@ class MoviesViewModel : ViewModel() {
         return if (currentState is ScreenState.SimilarFilmsSuccess) {
             currentState.films.size
         } else {
-            0 // Возвращаем 0, если состояние еще не успешно
+            0
         }
     }
 
     fun getActorDetails(actorId: Int) {
         viewModelScope.launch {
-            _actorDetailsState.value = ScreenState.ActorInfoLoading // This is for actor details loading state
+            _actorDetailsState.value = ScreenState.ActorInfoLoading
             try {
-                // Fetch actor details
                 val response = KinopoiskApi.retrofitService.getActorDetails(actorId)
-                _actorDetailsState.value = ScreenState.ActorInfoSuccess(response) // Update with actor data
+                _actorDetailsState.value = ScreenState.ActorInfoSuccess(response)
 
-                // Fetch movie details only after actor info is loaded
                 if (!response.films.isNullOrEmpty()) {
-                    fetchFilmDetails(response.films.take(8)) // Limit to first 8 films
+                    fetchFilmDetails(response.films.take(8))
                 } else {
-                    _movies.value = emptyList() // No movies available
+                    _movies.value = emptyList()
                 }
             } catch (e: Exception) {
-                // Handle error when fetching actor details
                 _actorDetailsState.value = ScreenState.ActorInfoError("Error loading actor details")
             }
         }
@@ -269,30 +264,26 @@ class MoviesViewModel : ViewModel() {
 
     private fun fetchFilmDetails(films: List<ActorFilm>?) {
         viewModelScope.launch {
-            _movies.value = emptyList() // Set movies to empty list initially
-
+            _movies.value = emptyList()
             if (films.isNullOrEmpty()) return@launch
 
             try {
-                // Fetch movie details
                 val movieDetails = films.mapNotNull { actorFilm ->
                     try {
                         actorFilm.filmId?.let { movieId ->
-                            // Получаем данные о фильме с постером
                             val movie = KinopoiskApi.retrofitService.getMovieDetails(movieId)
                             movie.posterUrl?.let {
-                                // Добавляем постер фильма в результат
                                 movie.copy(posterUrl = it)
                             }
                         }
                     } catch (e: Exception) {
-                        null // Ignore errors for individual movie fetches
+                        null
                     }
                 }
 
-                _movies.value = movieDetails // Set the movie details
+                _movies.value = movieDetails
             } catch (e: Exception) {
-                _movies.value = emptyList() // In case of failure, set movies to empty list
+                _movies.value = emptyList()
             }
         }
     }
@@ -301,17 +292,14 @@ class MoviesViewModel : ViewModel() {
 
     fun processFilmsByProfession(actorResponse: ActorDetailsResponse): Map<String, List<ActorFilm>> {
         return actorResponse.films!!.map { film ->
-            // Генерация URL для постера
-            val posterUrl = generatePosterUrl(film.posterUrl)  // Предположим, что поле API называется posterPath
-            film.copy(posterUrl = posterUrl)  // Обновляем объект ActorFilm
+            val posterUrl = generatePosterUrl(film.posterUrl)
+            film.copy(posterUrl = posterUrl)
         }.groupBy { it.professionKey.toString() }
     }
 
 
-    // Функция для генерации URL постера
     fun generatePosterUrl(posterPath: String?): String? {
         return if (posterPath != null) {
-            // Генерируем полный URL для постера
             "https://kinopoiskapiunofficial.tech/images/posters/kp/${posterPath}"
         } else {
             null
@@ -320,21 +308,17 @@ class MoviesViewModel : ViewModel() {
 
     fun getActorDetailsFilmPo(actorId: Int) {
         viewModelScope.launch {
-            _actorDetailsState.value = ScreenState.ActorFilmsLoading // Для загрузки
+            _actorDetailsState.value = ScreenState.ActorFilmsLoading
             try {
-                // Запрос деталей актера
                 val response = KinopoiskApi.retrofitService.getActorDetails(actorId)
 
-                // Группируем фильмы по профессиям
                 val filmsByProfession = processFilmsByProfession(response)
 
-                // Обновляем состояние с деталями актера и группировкой фильмов
                 _actorDetailsState.value = ScreenState.ActorFilmsSuccess(
                     actor = response,
                     filmsByProfession = filmsByProfession
                 )
             } catch (e: Exception) {
-                // Обработка ошибки
                 _actorDetailsState.value = ScreenState.ActorFilmsError("Ошибка загрузки данных актера")
             }
         }
@@ -343,7 +327,7 @@ class MoviesViewModel : ViewModel() {
 
     private fun fetchFilmsOfActor(films: List<ActorFilm>?) {
         viewModelScope.launch {
-            _moviesactor.value = emptyList() // Сброс списка фильмов перед загрузкой
+            _moviesactor.value = emptyList()
 
             if (films.isNullOrEmpty()) return@launch
 
@@ -352,15 +336,15 @@ class MoviesViewModel : ViewModel() {
                     try {
                         actorFilm.filmId?.let { movieId ->
                             val movie = KinopoiskApi.retrofitService.getMovieDetails(movieId)
-                            actorFilm.posterUrl = movie.posterUrl // Устанавливаем URL постера
-                            actorFilm // Возвращаем объект ActorFilm с обновленным постером
+                            actorFilm.posterUrl = movie.posterUrl
+                            actorFilm
                         }
                     } catch (e: Exception) {
                         null
                     }
                 }
 
-                _moviesactor.value = updatedFilms // Обновляем состояние с типом ActorFilm
+                _moviesactor.value = updatedFilms
             } catch (e: Exception) {
                 _moviesactor.value = emptyList()
             }

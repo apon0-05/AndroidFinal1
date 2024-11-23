@@ -48,7 +48,7 @@ fun NewHomePage(viewModel: MoviesViewModel, navController: NavController) {
     val zombieMoviesState by viewModel.zombieMoviesState.collectAsState()
 //    val familMovies by viewModel.familyMovies.collectAsState(initial = emptyList())
 
-    // Создаем список для хранения всех категорий
+
     val allMovies = listOf(premieresState, popularMoviesState, zombieMoviesState)
     val categoryNames = listOf("Премьеры", "Популярное", "Зомби")
 

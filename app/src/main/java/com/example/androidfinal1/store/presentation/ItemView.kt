@@ -37,7 +37,7 @@ fun ItemView(
         Column(
             modifier = Modifier.clickable { movie.id?.let { onClick(it) } }
         ) {
-            // Main image with poster URL
+
             movie.posterUrl?.let { posterUrl ->
                 Box(
                     modifier = Modifier
@@ -56,16 +56,16 @@ fun ItemView(
                         modifier = Modifier
                             .align(Alignment.TopEnd)
                             .padding(8.dp)
-                            .size(width = 24.dp, height = 16.dp) // Set background size
+                            .size(width = 24.dp, height = 16.dp)
                             .background(
                                 Color.Blue,
                                 RoundedCornerShape(4.dp)
-                            ), // Background color and rounded corners
-                        contentAlignment = Alignment.Center // Center text within the box
+                            ),
+                        contentAlignment = Alignment.Center
                     ) {
                         Text(
                             text = movie.rating?.toString() ?: "0.0",
-                            fontSize = 9.sp, // Adjust font size for better fit
+                            fontSize = 9.sp,
                             color = Color.White,
                         )
                     }
@@ -76,8 +76,8 @@ fun ItemView(
                 text = movie.title ?: "",
                 fontSize = 20.sp,
                 color = Color.Black,
-                maxLines = 2, // Limit the text to two lines
-                overflow = TextOverflow.Ellipsis, // Add "..." if the text exceeds the max lines
+                maxLines = 2,
+                overflow = TextOverflow.Ellipsis,
                 modifier = Modifier
                     .width(130.dp)
                     .padding(top = 5.dp)
@@ -87,17 +87,15 @@ fun ItemView(
                 text = movie.genres.joinToString { it.name },
                 fontSize = 15.sp,
                 color = Color.Gray,
-                maxLines = 2, // Limit the text to two lines
-                overflow = TextOverflow.Ellipsis, // Add "..." if the text exceeds the max lines
+                maxLines = 2,
+                overflow = TextOverflow.Ellipsis,
                 modifier = Modifier
                     .width(130.dp)
 
             )
 
-            // Title and genres below the image
         }
 
-        // }
 
     }
 

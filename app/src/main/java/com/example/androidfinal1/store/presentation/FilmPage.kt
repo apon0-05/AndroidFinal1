@@ -89,7 +89,6 @@ fun FilmPage(movieId: Int?, navController: NavController) {
 
             when (val staff = staffState.value) {
                 is ScreenState.ActorLoading -> {
-                    // Показываем индикатор загрузки актеров
                     Box(
                         modifier = Modifier
                             .fillMaxSize(),
@@ -123,29 +122,24 @@ fun FilmPage(movieId: Int?, navController: NavController) {
 //                verticalArrangement = Arrangement.spacedBy(16.dp)
 //            ) {
                                 item {
-                                    // Блок информации о фильме
                                     MovieInfo(movie, navController)
                                 }
                                 item {
-                                    // Блок с описанием о фильме
                                     Description(movie)
                                 }
                                 item {
-                                    // Секция: В фильме снимались
                                     SectionTitle(title = "В фильме снимались", count = actors.size, onClick = {})
                                 }
                                 item {
                                     CastList(actors, navController)
                                 }
                                 item {
-                                    // Секция: Над фильмом работали
                                     SectionTitle(title = "Над фильмом работали", count = directors.size, onClick = {})
                                 }
                                 item {
                                     CrewList(directors)
                                 }
                                 item {
-                                    // Секция: Галерея
                                     SectionTitle(title = "Галерея", count = imagesCount, onClick = {
                                         navController.navigate("filmmDetail/${movie.id}")
                                     })
@@ -156,17 +150,11 @@ fun FilmPage(movieId: Int?, navController: NavController) {
 
                                 }
                                 item {
-                                    // Секция: Похожие фильмы
                                     SectionTitle(title = "Похожие фильмы", count = similarFilmsCount, onClick = {})
                                 }
                                 item {
                                     movie.id?.let { SimilarMovies(it) }
                                 }
-
-
-                                //}
-
-
 
                             }
                         }
@@ -175,7 +163,6 @@ fun FilmPage(movieId: Int?, navController: NavController) {
 
                 }
                 is ScreenState.ActorError -> {
-                    // Обработка ошибок загрузки актеров
                     Text(
                         text = "Ошибка загрузки актеров: ${staff.message}",
                         color = Color.Red,
@@ -183,7 +170,6 @@ fun FilmPage(movieId: Int?, navController: NavController) {
                     )
                 }
                 else -> {
-                    // Обрабатываем другие состояния, если необходимо
                 }
             }
 
@@ -199,7 +185,6 @@ fun FilmPage(movieId: Int?, navController: NavController) {
         }
         ScreenState.Initial -> Unit
         else -> {
-            // Другие состояния, если они будут добавлены в будущем
         }
     }
 
@@ -231,7 +216,7 @@ fun MovieInfo(movie: MovieId, navController: NavController) {
             colorFilter = ColorFilter.tint(Color.White)
         )
 
-        // Картинка фильма
+
 //        Image(
 //            painter = painterResource(id = R.drawable.some_movie_image),
 //            contentDescription = "Movie Poster",
@@ -274,7 +259,7 @@ fun MovieInfo(movie: MovieId, navController: NavController) {
             Spacer(modifier = Modifier.height(10.dp))
 
             Row(
-                horizontalArrangement = Arrangement.spacedBy(13.dp) // Делаем пространство между иконками
+                horizontalArrangement = Arrangement.spacedBy(13.dp)
             ) {
                 IconsHolder(R.drawable.icons)
                 IconsHolder(R.drawable.icons2)
@@ -354,16 +339,16 @@ fun SectionTitle(title: String, count: Int, onClick: () -> Unit) {
 @Composable
 fun CastList(actors: List<Actor>, navController: NavController) {
     LazyHorizontalGrid(
-        rows = GridCells.Fixed(4), // Количество строк в сетке (например, 2)
+        rows = GridCells.Fixed(4),
         modifier = Modifier
             .padding(start = 26.dp)
             .fillMaxWidth()
-            .height(300.dp), // Указываем высоту для сетки
+            .height(300.dp),
        // horizontalArrangement = Arrangement.spacedBy(8.dp),
         verticalArrangement = Arrangement.spacedBy(5.dp),
         contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)
     ) {
-        items(actors) { actor -> // Количество элементов в сетке
+        items(actors) { actor ->
             InfoCards(actor = actor, onClick = {
                 id -> navController.navigate("actorDetail/${actor.staffId}")
             })
@@ -401,16 +386,16 @@ fun InfoCards(
 @Composable
 fun CrewList(actors: List<Actor>) {
     LazyHorizontalGrid(
-        rows = GridCells.Fixed(2), // Устанавливаем 2 строки
+        rows = GridCells.Fixed(2),
         modifier = Modifier
             .padding(start = 26.dp)
             .fillMaxWidth()
-            .height(175.dp), // Указываем высоту для сетки
-        horizontalArrangement = Arrangement.spacedBy(8.dp), // Расстояние между элементами по горизонтали
-        contentPadding = PaddingValues(16.dp), // Паддинги вокруг содержимого
+            .height(175.dp),
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        contentPadding = PaddingValues(16.dp),
 
     ) {
-        items(actors) { actor -> // Количество элементов в сетке
+        items(actors) { actor ->
             InfoCards(actor, onClick = {})
         }
     }

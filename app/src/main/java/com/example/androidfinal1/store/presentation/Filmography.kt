@@ -106,7 +106,6 @@ fun Filmography(actorId: Int?, navController: NavController
 
                     //Spacer(modifier = Modifier.weight(1f))
 
-                    // Список фильмов для выбранной профессии
                     val filmsToShow = filmsByProfession[selectedProfession.value] ?: emptyList()
 
                     LazyColumn(
