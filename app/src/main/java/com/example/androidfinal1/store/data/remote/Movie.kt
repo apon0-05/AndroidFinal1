@@ -34,11 +34,59 @@ data class Actor(
     @SerializedName("nameRu") val nameRu: String?,
     @SerializedName("professionKey") val professionKey: String?,
     @SerializedName("posterUrl") val posterUrl: String?,
+    @SerializedName("professionText") val professionText: String?,
 
 )
 
+data class ImageResponse(
+    @SerializedName("total") val total: Int?,
+    @SerializedName("totalPages") val totalPages: Int,
+    @SerializedName("items") val items: List<ImageItem>
+)
 
+data class ImageItem(
+    @SerializedName("imageUrl") val imageUrl: String,
+    @SerializedName("previewUrl") val previewUrl: String
+)
 
+data class SimilarFilmsResponse(
+    @SerializedName("total") val total: Int,
+    @SerializedName("items") val items: List<SimilarFilmItem>
+)
+
+data class SimilarFilmItem(
+    @SerializedName("filmId") val filmId: Int,
+    @SerializedName("nameRu") val nameRu: String,
+    @SerializedName("nameEn") val nameEn: String,
+    @SerializedName("posterUrl") val posterUrl: String?,
+
+)
+
+data class ActorDetailsResponse(
+    @SerializedName("personId") val personId: Int,
+    @SerializedName("nameRu") val nameRu: String?,
+    @SerializedName("nameEn") val nameEn: String?,
+    @SerializedName("posterUrl") val posterUrl: String?,
+    @SerializedName("growth") val growth: String?,
+    @SerializedName("birthday") val birthday: String?,
+    @SerializedName("death") val death: String?,
+    @SerializedName("age") val age: Int?,
+    @SerializedName("birthplace") val birthplace: String?,
+    @SerializedName("deathplace") val deathplace: String?,
+    @SerializedName("profession") val profession: String?,
+    @SerializedName("facts") val facts: List<String>?,
+    @SerializedName("films") val films: List<ActorFilm>?
+)
+
+data class ActorFilm(
+    @SerializedName("filmId") val filmId: Int,
+    @SerializedName("nameRu") val nameRu: String?,
+    @SerializedName("nameEn") val nameEn: String?,
+    @SerializedName("rating") val rating: String?,
+    @SerializedName("description") val description: String?,
+    @SerializedName("professionKey") val professionKey: String?,
+    var posterUrl: String? = null
+)
 data class Genre(
     @SerializedName("genre") val name: String
 )
@@ -46,7 +94,7 @@ data class Country(
     @SerializedName("country") val country: String
 )
 
-data class MoviesResponse(val movies: List<Movie>)
+
 
 data class PremieresResponse(
     @SerializedName("items") val movies: List<Movie>
@@ -54,6 +102,7 @@ data class PremieresResponse(
 data class ZombieResponse(
     @SerializedName("items") val movies: List<Movie>
 )
+
 //data class Product(
 //    val nameRu: String,
 //    val posterUrlPreview: String,

@@ -7,34 +7,60 @@ import retrofit2.http.Query
 
 // Retrofit API Interface for Kinopoisk
 interface KinopoiskApiService {
-    @Headers("X-API-KEY: cd3aeee9-bf7d-43fe-aea2-9ccdf67e3c50")
+    @Headers("X-API-KEY: f8f3d444-6758-4b3b-94a1-44a87e2834dc")
     @GET("v2.2/films/premieres")
     suspend fun getPremieres(
         @Query("year") year: Int,
         @Query("month") month: String
     ): Response<PremieresResponse>
 
-    @Headers("X-API-KEY: cd3aeee9-bf7d-43fe-aea2-9ccdf67e3c50")
+    @Headers("X-API-KEY: f8f3d444-6758-4b3b-94a1-44a87e2834dc")
     @GET("v2.2/films/collections")
     suspend fun getCollections(
         @Query("type") type: String,
         @Query("page") page: Int
     ): Response<PremieresResponse>
 
-    @Headers("X-API-KEY: cd3aeee9-bf7d-43fe-aea2-9ccdf67e3c50")
+    @Headers("X-API-KEY: f8f3d444-6758-4b3b-94a1-44a87e2834dc")
     @GET("v2.2/films/collections?type:TOP_250_TV_SHOWS?page:1")
     suspend fun getZombie(
 //        @Query("type") type: String,
 //        @Query("page") page: Int
     ): Response<PremieresResponse>
 
-    @Headers("X-API-KEY: cd3aeee9-bf7d-43fe-aea2-9ccdf67e3c50")
+    @Headers("X-API-KEY: f8f3d444-6758-4b3b-94a1-44a87e2834dc")
     @GET("v2.2/films/{id}")
     suspend fun getMovieDetails(@Path("id") movieId: Int): MovieId
 
-    @Headers("X-API-KEY: cd3aeee9-bf7d-43fe-aea2-9ccdf67e3c50")
+    @Headers("X-API-KEY: f8f3d444-6758-4b3b-94a1-44a87e2834dc")
     @GET("v1/staff")
     suspend fun getActor(@Query("filmId") movieId: Int): Actor
+
+    @Headers("X-API-KEY: f8f3d444-6758-4b3b-94a1-44a87e2834dc")
+    @GET("v1/staff")
+    suspend fun getStaffByFilmId(@Query("filmId") movieId: Int): List<Actor>
+
+
+    @Headers("X-API-KEY: f8f3d444-6758-4b3b-94a1-44a87e2834dc")
+    @GET("v2.2/films/{id}/images")
+    suspend fun getFilmImages(
+        @Path("id") filmId: Int,
+        @Query("type") type: String = "STILL", // Можно изменить на другие типы изображений
+        @Query("page") page: Int = 1
+    ): ImageResponse
+
+    @Headers("X-API-KEY: f8f3d444-6758-4b3b-94a1-44a87e2834dc")
+    @GET("v2.2/films/{id}/similars")
+    suspend fun getSimilarFilms(
+        @Path("id") filmId: Int
+    ): SimilarFilmsResponse
+
+    @Headers("X-API-KEY: f8f3d444-6758-4b3b-94a1-44a87e2834dc")
+    @GET("/api/v1/staff/{id}")
+    suspend fun getActorDetails(
+        @Path("id") actorId: Int
+    ): ActorDetailsResponse
+
 
 
 

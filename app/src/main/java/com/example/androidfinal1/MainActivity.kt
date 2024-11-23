@@ -1,6 +1,7 @@
 package com.example.androidfinal1
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -10,15 +11,21 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
+import com.example.androidfinal1.store.presentation.ActorPage
 import com.example.androidfinal1.store.presentation.BottomNavigationBar
 import com.example.androidfinal1.store.presentation.CategoryScreen
-import com.example.androidfinal1.store.presentation.FilmDetailPage
+//import com.example.androidfinal1.store.presentation.FilmDetailPage
+import com.example.androidfinal1.store.presentation.FilmPage
+import com.example.androidfinal1.store.presentation.Filmography
+import com.example.androidfinal1.store.presentation.Gallery
 import com.example.androidfinal1.store.presentation.NewHomePage
 import com.example.androidfinal1.store.presentation.Screen
-import com.example.androidfinal1.store.viewmodel.MoviesViewModel
+import com.example.androidfinal1.store.presentation.viewmodel.MoviesViewModel
 import com.example.androidfinal1.ui.theme.AndroidFinal1Theme
 
 class MainActivity : ComponentActivity() {
@@ -49,9 +56,26 @@ class MainActivity : ComponentActivity() {
                         }
                         composable("filmDetail/{id}") { backStackEntry ->
                             val movieId = backStackEntry.arguments?.getString("id")?.toIntOrNull()
-                                FilmDetailPage(movieId = movieId,  navController)
+                                FilmPage(movieId = movieId,  navController)
+
+                        }
+                        composable("actorDetail/{id}") { backStackEntry ->
+                            val actorId = backStackEntry.arguments?.getString("id")?.toIntOrNull()
+                            ActorPage(actorId = actorId,  navController)
 
 
+                        }
+                        composable("filmmDetail/{id}") { backStackEntry ->
+                            val movieId = backStackEntry.arguments?.getString("id")?.toIntOrNull()
+                            Gallery(movieId = movieId,  navController)
+
+                        }
+                        composable("actorFilms/{actorId}",
+                            arguments = listOf(navArgument("actorId") { type = NavType.IntType }) // Указываем, что actorId — это Int
+                        ) { backStackEntry ->
+                            val actorId = backStackEntry.arguments?.getInt("actorId")
+                            Log.d("actorINMain", "Clicked movie ID: ${actorId}")
+                            Filmography(actorId = actorId, navController = navController)
                         }
                         composable(Screen.Search.route) { SearchPage(navController) }
                         composable(Screen.Profile.route) { ProfilePage(navController) }

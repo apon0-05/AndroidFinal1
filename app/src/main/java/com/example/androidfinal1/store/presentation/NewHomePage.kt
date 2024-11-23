@@ -26,6 +26,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -34,9 +35,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.example.androidfinal1.store.viewmodel.MoviesViewModel
+import com.example.androidfinal1.store.presentation.viewmodel.MoviesViewModel
 import com.example.androidfinal1.R
-import com.example.androidfinal1.store.viewmodel.ScreenState
+import com.example.androidfinal1.store.presentation.viewmodel.ScreenState
 
 
 @Composable
@@ -56,7 +57,13 @@ fun NewHomePage(viewModel: MoviesViewModel, navController: NavController) {
             zombieMoviesState is ScreenState.Loading
 
     if (isLoading) {
-        CircularProgressIndicator(modifier = Modifier.padding(20.dp))
+        Box(
+            modifier = Modifier
+                .fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
+            CircularProgressIndicator(modifier = Modifier.padding(16.dp))
+        }
     } else {
         Text(
             text = "Skillcinema",
@@ -102,7 +109,8 @@ fun NewHomePage(viewModel: MoviesViewModel, navController: NavController) {
                                         Log.d("Loh", state.movies.size.toString())
                                         items(state.movies.take(8)) { movie ->
                                            // Log.d("MovieDebug", "Movie ID before click: ${movie.id}")
-                                            ItemView(movie = movie
+                                            ItemView(
+                                                movie = movie
                                                 , onClick = {
                                                 id ->
                                                 Log.d("MovieClick", "Clicked movie ID: ${movie.id}")
@@ -172,7 +180,7 @@ fun AllShowButton(onShowAll: () -> Unit){
 
                 ){
                     Image(
-                        painter = painterResource(id = R.drawable.back),
+                        painter = painterResource(id = R.drawable.showall),
                         contentDescription = "Icon",
                         modifier = Modifier
                             .size(15.dp)

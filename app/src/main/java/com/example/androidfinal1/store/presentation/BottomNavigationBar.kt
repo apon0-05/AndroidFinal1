@@ -1,6 +1,5 @@
 package com.example.androidfinal1.store.presentation
 
-
 import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -50,7 +49,7 @@ fun BottomNavigationBar(navController: NavController) {
 
             NavigationBar(
                 modifier = Modifier.padding(horizontal = 50.dp),
-                containerColor = Color.White, // Делает фон NavigationBar прозрачным, чтобы он унаследовал фон содержащего Box
+                containerColor = Color.White,
                 tonalElevation = 0.dp
             ) {
 //                val items = listOf(Screen.Home, Screen.Search, Screen.Profile)

@@ -10,13 +10,14 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.androidfinal1.store.viewmodel.MoviesViewModel
+import com.example.androidfinal1.store.presentation.viewmodel.MoviesViewModel
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -32,8 +33,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.androidfinal1.R
-import com.example.androidfinal1.store.data.remote.Movie
-import com.example.androidfinal1.store.viewmodel.ScreenState
+import com.example.androidfinal1.store.presentation.viewmodel.ScreenState
 
 
 @SuppressLint("UnrememberedMutableState")
@@ -75,7 +75,13 @@ fun CategoryScreen(categoryIndex: Int, navController: NavController) {
 
         when (state) {
             is ScreenState.Loading -> {
-                CircularProgressIndicator(modifier = Modifier.padding(16.dp))
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    CircularProgressIndicator(modifier = Modifier.padding(16.dp))
+                }
             }
             is ScreenState.Success -> {
                 LazyVerticalGrid(
