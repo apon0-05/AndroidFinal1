@@ -1,4 +1,4 @@
-package com.example.androidfinal1.store.presentation
+package com.example.androidfinal1.store.presentation.screen
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -26,6 +26,7 @@ import androidx.navigation.NavController
 import coil.compose.rememberImagePainter
 import com.example.androidfinal1.R
 import com.example.androidfinal1.store.data.remote.ImageItem
+import com.example.androidfinal1.store.presentation.components.GalleryTopBar
 import com.example.androidfinal1.store.presentation.viewmodel.MoviesViewModel
 import com.example.androidfinal1.store.presentation.viewmodel.ScreenState
 
@@ -75,40 +76,6 @@ fun Gallery(movieId: Int?, navController: NavController) {
         else -> Unit
     }
 
-}
-
-@Composable
-private fun GalleryTopBar(navController: NavController) {
-    TopAppBar(
-        backgroundColor = Color.White,
-        elevation = 0.dp,
-        modifier = Modifier.fillMaxWidth()
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 26.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Image(
-                painter = painterResource(id = R.drawable.caretleft),
-                contentDescription = "Back",
-                modifier = Modifier
-                    .size(24.dp)
-                    .clickable { navController.popBackStack() },
-                colorFilter = ColorFilter.tint(Color.Black)
-            )
-
-            Text(
-                text = "Галерея",
-                fontSize = 17.sp,
-                fontWeight = FontWeight.Bold,
-
-            )
-            Spacer(modifier = Modifier.size(24.dp))
-        }
-    }
 }
 
 @Composable

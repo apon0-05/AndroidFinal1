@@ -1,4 +1,4 @@
-package com.example.androidfinal1.store.presentation
+package com.example.androidfinal1.store.presentation.screen
 
 import android.util.Log
 import androidx.compose.foundation.Image
@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -41,7 +40,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil.compose.rememberImagePainter
 import com.example.androidfinal1.R
-import com.example.androidfinal1.store.data.remote.Movie
 import com.example.androidfinal1.store.data.remote.MovieId
 import com.example.androidfinal1.store.presentation.viewmodel.MoviesViewModel
 import com.example.androidfinal1.store.presentation.viewmodel.ScreenState

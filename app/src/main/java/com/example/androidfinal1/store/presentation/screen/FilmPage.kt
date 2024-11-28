@@ -1,4 +1,4 @@
-package com.example.androidfinal1.store.presentation
+package com.example.androidfinal1.store.presentation.screen
 
 import android.util.Log
 import androidx.compose.foundation.Image
@@ -41,6 +41,7 @@ import com.example.androidfinal1.R
 import com.example.androidfinal1.store.data.remote.Actor
 import com.example.androidfinal1.store.data.remote.Movie
 import com.example.androidfinal1.store.data.remote.MovieId
+import com.example.androidfinal1.store.presentation.components.ItemView
 import com.example.androidfinal1.store.presentation.viewmodel.MoviesViewModel
 import com.example.androidfinal1.store.presentation.viewmodel.ScreenState
 

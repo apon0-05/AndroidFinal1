@@ -16,15 +16,15 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.example.androidfinal1.store.presentation.ActorPage
-import com.example.androidfinal1.store.presentation.BottomNavigationBar
-import com.example.androidfinal1.store.presentation.CategoryScreen
+import com.example.androidfinal1.store.presentation.screen.ActorPage
+import com.example.androidfinal1.store.presentation.navigation.BottomNavigationBar
+import com.example.androidfinal1.store.presentation.screen.CategoryScreen
 //import com.example.androidfinal1.store.presentation.FilmDetailPage
-import com.example.androidfinal1.store.presentation.FilmPage
-import com.example.androidfinal1.store.presentation.Filmography
-import com.example.androidfinal1.store.presentation.Gallery
-import com.example.androidfinal1.store.presentation.NewHomePage
-import com.example.androidfinal1.store.presentation.Screen
+import com.example.androidfinal1.store.presentation.screen.FilmPage
+import com.example.androidfinal1.store.presentation.screen.Filmography
+import com.example.androidfinal1.store.presentation.screen.Gallery
+import com.example.androidfinal1.store.presentation.screen.NewHomePage
+import com.example.androidfinal1.store.presentation.navigation.Screen
 import com.example.androidfinal1.store.presentation.viewmodel.MoviesViewModel
 import com.example.androidfinal1.ui.theme.AndroidFinal1Theme
 

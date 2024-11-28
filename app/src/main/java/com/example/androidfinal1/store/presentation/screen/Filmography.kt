@@ -1,4 +1,4 @@
-package com.example.androidfinal1.store.presentation
+package com.example.androidfinal1.store.presentation.screen
 
 import android.util.Log
 import androidx.compose.foundation.Image
@@ -19,9 +19,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.IconButton
 import androidx.compose.material.Text
-import androidx.compose.material.TopAppBar
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -32,21 +30,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.input.pointer.motionEventSpy
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil.compose.rememberImagePainter
-import com.example.androidfinal1.R
 import com.example.androidfinal1.store.data.remote.ActorFilm
-import com.example.androidfinal1.store.data.remote.MovieId
+import com.example.androidfinal1.store.presentation.components.FilmographyTopBar
 import com.example.androidfinal1.store.presentation.viewmodel.MoviesViewModel
 import com.example.androidfinal1.store.presentation.viewmodel.ScreenState
 
@@ -142,45 +135,6 @@ fun Filmography(actorId: Int?, navController: NavController
     }
 }
 
-@Composable
-fun FilmographyTopBar(actorName: String, navController: NavController){
-    TopAppBar(
-        backgroundColor = Color.White,
-        modifier = Modifier.fillMaxWidth(),
-        elevation = 0.dp
-    ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Start,
-            modifier = Modifier.padding(horizontal = 3.dp)
-        ) {
-            IconButton(onClick = { navController.popBackStack()}) {
-                Image(
-                    painter = painterResource(id = R.drawable.back),
-                    contentDescription = "Back",
-                    modifier = Modifier.size(13.dp)
-                )
-            }
-            Spacer(modifier = Modifier.width(68.dp))
-            Text(
-                text = "Фильмография",
-                fontSize = 15.sp,
-                fontWeight = FontWeight.Bold,
-            )
-        }
-    }
-    Text(
-        text = actorName,
-        style = TextStyle(
-            fontSize = 18.sp,
-            fontWeight = FontWeight.Bold,
-            color = Color.Black
-        ),
-        modifier = Modifier
-            .padding(horizontal = 26.dp, vertical = 8.dp)
-    )
-
-}
 @Composable
 fun FilmList(tabs: List<String>, selectedTab: String?, onTabSelected: (String) -> Unit){
     LazyRow(

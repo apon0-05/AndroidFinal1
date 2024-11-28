@@ -1,4 +1,4 @@
-package com.example.androidfinal1.store.presentation
+package com.example.androidfinal1.store.presentation.navigation
 
 import com.example.androidfinal1.R
 
