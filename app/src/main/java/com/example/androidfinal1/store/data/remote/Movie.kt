@@ -103,6 +103,13 @@ data class ZombieResponse(
     @SerializedName("items") val movies: List<Movie>
 )
 
+data class FilmSearchResponse(
+    @SerializedName("keyword") val keyword: String,
+    @SerializedName("pagesCount") val pagesCount: Int,
+    @SerializedName("searchFilmsCountResult") val searchFilmsCountResult: Int,
+    @SerializedName("films") val films: List<Movie> // Заменил Film на Movie
+)
+
 //data class Product(
 //    val nameRu: String,
 //    val posterUrlPreview: String,

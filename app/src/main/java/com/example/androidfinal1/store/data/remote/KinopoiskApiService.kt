@@ -61,6 +61,12 @@ interface KinopoiskApiService {
         @Path("id") actorId: Int
     ): ActorDetailsResponse
 
+    @GET("api/v2.1/films/search-by-keyword")
+    suspend fun searchByKeyword(
+        @Query("keyword") keyword: String,
+        @Query("page") page: Int
+    ): FilmSearchResponse
+
 
 
 

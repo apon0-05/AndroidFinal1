@@ -1,5 +1,6 @@
 package com.example.androidfinal1.store.presentation.viewmodel
 
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.androidfinal1.store.data.remote.Actor
@@ -97,6 +98,10 @@ class MoviesViewModel : ViewModel() {
     private val _errorMessage = MutableStateFlow<String?>(null)
     val errorMessage: StateFlow<String?> get() = _errorMessage
 
+    private val _searchFilmsState = MutableStateFlow<ScreenState>(ScreenState.Initial)
+    val searchFilmsState: StateFlow<ScreenState> get() = _searchFilmsState
+
+
     init {
         fetchMovies()
     }
@@ -110,6 +115,7 @@ class MoviesViewModel : ViewModel() {
             //fetchFamily()
         }
     }
+
 
     private suspend fun fetchPremieres(year: Int, month: String) {
         _premieresState.value = ScreenState.Loading
@@ -368,6 +374,23 @@ class MoviesViewModel : ViewModel() {
                 _actorFilms.value = filmsWithPosters.groupBy { it.professionKey ?: "Unknown" }
             } catch (e: Exception) {
                 _errorMessage.value = "Failed to fetch actor films: ${e.message}"
+            }
+        }
+    }
+
+    fun searchFilms(keyword: String, page: Int = 1) {
+        viewModelScope.launch {
+            _searchFilmsState.value = ScreenState.Loading
+            try {
+                val response = KinopoiskApi.retrofitService.searchByKeyword(keyword, page)
+
+                if (response.films.isNotEmpty()) {
+                    _searchFilmsState.value = ScreenState.Success(response.films)
+                } else {
+                    _searchFilmsState.value = ScreenState.Error("Фильмы не найдены для ключевого слова: $keyword")
+                }
+            } catch (e: Exception) {
+                _searchFilmsState.value = ScreenState.Error("Ошибка загрузки: ${e.message}")
             }
         }
     }

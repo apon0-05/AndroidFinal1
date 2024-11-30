@@ -173,13 +173,6 @@ fun FilmPage(movieId: Int?, navController: NavController) {
                 else -> {
                 }
             }
-
-
-
-
-
-
-
         }
         is ScreenState.FilmError -> {
             Text(text ="ura" ) //currentState.message, color = Color.Gray
@@ -190,8 +183,6 @@ fun FilmPage(movieId: Int?, navController: NavController) {
     }
 
 }
-
-
 
 @Composable
 fun MovieInfo(movie: MovieId, navController: NavController) {
@@ -216,15 +207,6 @@ fun MovieInfo(movie: MovieId, navController: NavController) {
                 .clickable { navController.popBackStack() },
             colorFilter = ColorFilter.tint(Color.White)
         )
-
-
-//        Image(
-//            painter = painterResource(id = R.drawable.some_movie_image),
-//            contentDescription = "Movie Poster",
-//            modifier = Modifier
-//                .align(Alignment.Center)
-//                .size(200.dp) // Размер картинки
-//        )
 
         Column(
             modifier = Modifier
@@ -488,8 +470,8 @@ fun SimilarMovies(filmId: Int) {
                             id = film.filmId,
                             title = film.nameRu,
                             posterUrl = film.posterUrl,
-                            rating = null, // Вы можете добавить рейтинг, если есть
-                            genres = emptyList() // Вы можете добавить жанры, если есть
+                            rating = null,
+                            genres = emptyList()
                         ),
                         onClick = { movieId -> /* Действие при клике на фильм */ }
                     )
