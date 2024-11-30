@@ -11,8 +11,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Divider
 import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.IconButton
 import androidx.compose.material.RangeSlider
 import androidx.compose.material.Slider
 import androidx.compose.material.SliderDefaults
@@ -28,13 +30,15 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.example.androidfinal1.R
+import com.example.androidfinal1.store.data.remote.MovieId
 import com.example.androidfinal1.store.presentation.components.FilmCard
 import com.example.androidfinal1.store.presentation.components.ShowContent
 import androidx.compose.foundation.layout.Row as Row1
 
 @Composable
-fun SearchPreferences() {
+fun SearchPreferences(navController: NavController) {
     val tabs = listOf("Все", "Фильмы", "Сериалы")
     val tabs2 = listOf("Дата", "Популярность", "Рейтинг")
 
@@ -43,14 +47,18 @@ fun SearchPreferences() {
             Row(
                 modifier = Modifier
                     .padding(26.dp),
-                horizontalArrangement = Arrangement.spacedBy(92.dp)
+                horizontalArrangement = Arrangement.spacedBy(86.dp)
             ) {
-                Image(
-                    painter = painterResource(R.drawable.back),
-                    contentDescription = "not watched list",
-                    modifier = Modifier
-                        .size(16.dp)
-                )
+                IconButton(
+                    onClick = { navController.popBackStack() }
+                ) {
+                    Image(
+                        painter = painterResource(R.drawable.back),
+                        contentDescription = "not watched list",
+                        modifier = Modifier
+                            .size(16.dp)
+                    )
+                }
                 Text(text = "Настройки поиска")
             }
         }
@@ -79,10 +87,10 @@ fun SearchPreferences() {
                 title = "Сортировать"
             )
         }
-        item {
-            CustomDivider()
-            NotWatched()
-        }
+//        item {
+//            CustomDivider()
+//            NotWatched()
+//        }
     }
 }
 
@@ -156,7 +164,7 @@ fun RangeSliderExample() {
 
 
 @Composable
-fun NotWatched(modifier: Modifier = Modifier) {
+fun NotWatched(movies: List<MovieId>, modifier: Modifier = Modifier) {
     Spacer(modifier = Modifier.height(16.dp))
 
     Column(
@@ -182,12 +190,11 @@ fun NotWatched(modifier: Modifier = Modifier) {
 
         }
         Spacer(modifier = Modifier.height(16.dp))
-        FilmCard()
+        LazyColumn {
+            items(movies) { movie ->
+                FilmCard(movie = movie)
+            }
+        }
     }
 }
 
-@Composable
-@Preview(showBackground = true)
-fun SearchPrefPreview() {
-    SearchPreferences()
-}

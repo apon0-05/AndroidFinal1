@@ -1,6 +1,7 @@
 package com.example.androidfinal1.store.presentation.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -21,13 +22,18 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.key.KeyEvent
+import androidx.compose.ui.input.key.key
+import androidx.compose.ui.input.key.onKeyEvent
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.input.key.Key
 
 @Composable
 fun SearchBar(
     query: String,
     onQueryChange: (String) -> Unit,
-    onSearchClick: () -> Unit
+    onSearchClick: () -> Unit,
+    onPreferencesClick: () -> Unit
 ) {
     Box(
         modifier = Modifier
@@ -55,7 +61,15 @@ fun SearchBar(
                 modifier = Modifier
                     .weight(1f)
                     .padding(8.dp)
-                    .align(Alignment.CenterVertically),
+                    .align(Alignment.CenterVertically)
+                    .onKeyEvent { event ->
+                        if (event.key == Key.Enter) {
+                            onSearchClick()
+                            true
+                        } else {
+                            false
+                        }
+                    },
                 decorationBox = { innerTextField ->
                     if (query.isEmpty()) {
                         Text(
@@ -81,7 +95,10 @@ fun SearchBar(
                 contentDescription = "Search",
                 modifier = Modifier
                     .align(Alignment.CenterVertically)
-                    .padding(horizontal = 16.dp),
+                    .padding(horizontal = 16.dp)
+                    .clickable {
+                        onPreferencesClick()
+                    },
                 tint = Color.Gray
             )
 

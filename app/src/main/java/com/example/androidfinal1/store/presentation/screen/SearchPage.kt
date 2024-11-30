@@ -32,6 +32,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -56,11 +57,12 @@ import com.example.androidfinal1.store.presentation.components.FilmCard
 import com.example.androidfinal1.store.presentation.components.SearchBar
 import com.example.androidfinal1.store.presentation.components.ShowContent
 import com.example.androidfinal1.store.presentation.viewmodel.MoviesViewModel
+import com.example.androidfinal1.store.presentation.viewmodel.ScreenState
 
-//viewModel: MoviesViewModel = hiltViewModel(), navController: NavController
 @Composable
-fun SearchPage() {
+fun SearchPage(viewModel: MoviesViewModel = hiltViewModel(), navController: NavController) {
     val query = remember { mutableStateOf("") }
+    val searchFilmsState by viewModel.searchFilmsState.collectAsState()
 
     LazyColumn {
         item {
@@ -68,12 +70,39 @@ fun SearchPage() {
                 query = query.value,
                 onQueryChange = { newQuery -> query.value = newQuery },
                 onSearchClick = {
-                    println("Поиск выполнен для: ${query.value}")
+                    if (query.value.isNotEmpty()) {
+                        viewModel.searchFilms(query.value)
+                    }
+                },
+                onPreferencesClick = {
+                    navController.navigate("search_preferences")
                 }
+
             )
         }
-        items(3) {
-            FilmCard()
+
+        when (searchFilmsState) {
+            is ScreenState.Loading -> {
+                item { Text("Загрузка...") }
+            }
+            is ScreenState.Error -> {
+                item { Text("Ошибка: ${(searchFilmsState as ScreenState.Error).message}") }
+            }
+            is ScreenState.SuccessMovieId -> {
+                val movies = (searchFilmsState as ScreenState.SuccessMovieId).movies
+                items(movies) { movie ->
+                    FilmCard(
+                        movie = movie,
+                        onClick = {
+                            // Переход на страницу фильма
+                            navController.navigate("filmDetail/${movie.id}")
+                        }
+                    )
+                }
+            }
+            else -> {
+                // Можно добавить другие состояния или пустой блок
+            }
         }
 
     }
@@ -82,9 +111,9 @@ fun SearchPage() {
 
 
 
-
-@Composable
-@Preview(showBackground = true)
-fun SearchPagePreview() {
-    SearchPage()
-}
+//
+//@Composable
+//@Preview(showBackground = true)
+//fun SearchPagePreview() {
+//    SearchPage()
+//}

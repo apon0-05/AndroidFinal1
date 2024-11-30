@@ -24,24 +24,23 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.rememberImagePainter
 import com.example.androidfinal1.R
+import com.example.androidfinal1.store.data.remote.MovieId
 
 @Composable
 fun FilmCard(
-    modifier: Modifier = Modifier,
-    imageRes: Int = R.drawable.a4, // Image resource for the poster
-    title: String = "Неизвестно", // Film title
-    description: String = "Нет описания", // Film description
-    rating: String = "0.0", // Rating of the film
+    movie: MovieId,
     onClick: () -> Unit = {} // Click handler for the card
 ) {
     Row(
-        modifier = modifier
+        modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 26.dp, vertical = 4.dp)
-            .clickable { onClick() } // Make card clickable
+            .clickable { onClick() }
     ) {
         Box(
             modifier = Modifier
@@ -49,7 +48,7 @@ fun FilmCard(
                 .clip(RoundedCornerShape(10.dp))
         ) {
             Image(
-                painter = painterResource(id = imageRes),
+                painter = rememberImagePainter(data = movie.posterUrl),
                 contentDescription = "Постер фильма",
                 contentScale = ContentScale.Crop,
                 modifier = Modifier.matchParentSize()
@@ -66,7 +65,7 @@ fun FilmCard(
                 contentAlignment = Alignment.Center
             ) {
                 Text(
-                    text = rating,
+                    text = movie.rating?.toString() ?: "0.0",
                     fontSize = 7.sp,
                     color = Color.Black
                 )
@@ -80,7 +79,7 @@ fun FilmCard(
             verticalArrangement = Arrangement.Center
         ) {
             Text(
-                text = title,
+                text = movie.title ?: "Без названия",
                 style = TextStyle(
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Bold,
@@ -89,12 +88,24 @@ fun FilmCard(
             )
             Spacer(modifier = Modifier.height(4.dp))
             Text(
-                text = description,
+                text = movie.year?.toString() ?: "Год не указан",
                 style = TextStyle(
                     fontSize = 14.sp,
                     color = Color.Gray
                 )
             )
+            Spacer(modifier = Modifier.height(4.dp))
+            Text(
+                text = movie.genres.joinToString(", ") { it.name } ?: "Не определен",
+                style = TextStyle(
+                    fontSize = 12.sp,
+                    color = Color.Gray
+                ),
+                maxLines = 2,
+                overflow = TextOverflow.Ellipsis
+            )
+
         }
     }
 }
+
