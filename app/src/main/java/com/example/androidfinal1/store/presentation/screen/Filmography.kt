@@ -179,7 +179,7 @@ fun FilmItem(movie: ActorFilm, onClick: () -> Unit){
             Log.d("FilmItem", "Poster URL: ${movie.posterUrl}")
             Image(
 
-                painter = rememberImagePainter(data = movie.posterUrl), // Подставьте корректный URL
+                painter = rememberImagePainter(data = movie.posterUrl),
                 contentDescription = "Постер фильма",
                 contentScale = ContentScale.Crop,
                 modifier = Modifier.matchParentSize()

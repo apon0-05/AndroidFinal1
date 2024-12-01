@@ -62,6 +62,8 @@ import com.example.androidfinal1.store.presentation.screen.Filmography
 import com.example.androidfinal1.store.presentation.screen.Gallery
 import com.example.androidfinal1.store.presentation.screen.NewHomePage
 import com.example.androidfinal1.store.presentation.navigation.Screen
+import com.example.androidfinal1.store.presentation.screen.SearchPage
+import com.example.androidfinal1.store.presentation.screen.SearchPreferences
 import com.example.androidfinal1.store.presentation.viewmodel.MoviesViewModel
 import com.example.androidfinal1.store.presentation.viewmodel.ScreenState
 import com.example.androidfinal1.ui.theme.AndroidFinal1Theme
@@ -115,7 +117,12 @@ class MainActivity : ComponentActivity() {
                             Log.d("actorINMain", "Clicked movie ID: ${actorId}")
                             Filmography(actorId = actorId, navController = navController)
                         }
-                        composable(Screen.Search.route) { SearchPage(navController) }
+                        composable(Screen.Search.route) {
+                            SearchPage(viewModel, navController)
+                        }
+                        composable("search_preferences") {
+                            SearchPreferences(navController)
+                        }
                         composable(Screen.Profile.route) { ProfilePage(navController) }
                     }
                 }
@@ -129,10 +136,10 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-@Composable
-fun SearchPage(navController: NavController){
-
-}
+//@Composable
+//fun SearchPage(navController: NavController){
+//
+//}
 
 @Composable
 fun ProfilePage(navController: NavController) {

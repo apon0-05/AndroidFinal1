@@ -13,6 +13,7 @@ navigationCompose = "2.5.3"
 playServicesMaps = "19.0.0"
 ui = "1.5.0"
 firebaseInappmessagingKtx = "21.0.1"
+roomKtx = "2.6.1"
 
 
 [libraries]
@@ -35,6 +36,7 @@ material3 = { module = "androidx.compose.material3:material3", version.ref = "ma
 play-services-maps = { group = "com.google.android.gms", name = "play-services-maps", version.ref = "playServicesMaps" }
 ui = { module = "androidx.compose.ui:ui", version.ref = "ui" }
 firebase-inappmessaging-ktx = { group = "com.google.firebase", name = "firebase-inappmessaging-ktx", version.ref = "firebaseInappmessagingKtx" }
+androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "roomKtx" }
 
 
 

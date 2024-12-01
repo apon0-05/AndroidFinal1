@@ -61,6 +61,12 @@ interface KinopoiskApiService {
         @Path("id") actorId: Int
     ): ActorDetailsResponse
 
+    @Headers("X-API-KEY: f8f3d444-6758-4b3b-94a1-44a87e2834dc")
+    @GET("v2.1/films/search-by-keyword")
+    suspend fun searchFilms(
+        @Query("keyword") keyword: String
+    ): FilmResponse
+
 
 
 

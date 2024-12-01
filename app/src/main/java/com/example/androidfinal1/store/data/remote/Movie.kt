@@ -103,6 +103,43 @@ data class ZombieResponse(
     @SerializedName("items") val movies: List<Movie>
 )
 
+data class FilmResponse(
+    @SerializedName("searchFilmsCountResult") val searchFilmsCountResult: Int,
+    @SerializedName("films") val films: List<Film>
+)
+
+data class Film(
+    @SerializedName("kinopoiskId") val filmId: Int,
+    @SerializedName("nameRu") val nameRu: String,
+    @SerializedName("nameEn") val nameEn: String,
+    @SerializedName("year") val year: String,
+    @SerializedName("description") val description: String,
+    @SerializedName("ratingKinopoisk") val rating: String,
+    @SerializedName("posterUrlPreview") val posterUrl: String,
+    @SerializedName("genres") val genres: List<Genre>
+
+    )
+
+// Преобразуем Film в MovieId
+fun Film.toMovieId(): MovieId {
+    return MovieId(
+        title = this.nameRu,
+        genres = this.genres,
+        posterUrl = this.posterUrl,
+        rating = this.rating?.takeIf { it.isNotEmpty() }?.toDoubleOrNull() ?: 0.0,
+        id = this.filmId,
+        nameRu = this.nameRu,
+        year = this.year.toIntOrNull() ?: 0,
+        ratingAgeLimits = null, // В Film нет информации о возрастных ограничениях, если оно нужно — уточните
+        countries = emptyList(), // Пустой список стран, если это нужно — добавьте реальные данные
+        filmLength = null, // В Film нет длины фильма, если это нужно — добавьте реальное поле
+        shortDescription = this.description, // Описание
+        description = this.description // Полное описание
+    )
+}
+
+
+
 //data class Product(
 //    val nameRu: String,
 //    val posterUrlPreview: String,

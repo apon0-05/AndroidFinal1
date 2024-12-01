@@ -1,15 +1,18 @@
 package com.example.androidfinal1.store.presentation.viewmodel
 
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.androidfinal1.store.data.remote.Actor
 import com.example.androidfinal1.store.data.remote.ActorDetailsResponse
 import com.example.androidfinal1.store.data.remote.ActorFilm
+import com.example.androidfinal1.store.data.remote.Film
 import com.example.androidfinal1.store.data.remote.ImageItem
 import com.example.androidfinal1.store.data.remote.KinopoiskApi
 import com.example.androidfinal1.store.data.remote.Movie
 import com.example.androidfinal1.store.data.remote.MovieId
 import com.example.androidfinal1.store.data.remote.SimilarFilmItem
+import com.example.androidfinal1.store.data.remote.toMovieId
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -24,13 +27,16 @@ sealed interface ScreenState {
     data class FilmSuccess(val movie: MovieId) : ScreenState
     data class FilmError(val message: String) : ScreenState
 
+    data class SuccessMovieId(val movies: List<MovieId>) : ScreenState
+
+
     object ActorLoading: ScreenState
     data class ActorSuccess(val actor: List<Actor>): ScreenState
     data class ActorError(val message: String): ScreenState
 
 
     object ActorFilmsLoading: ScreenState
-    data class ActorFilmsSuccess(val actor: ActorDetailsResponse,  val filmsByProfession: Map<String, List<ActorFilm>> ): ScreenState
+    data class ActorFilmsSuccess(val actor: ActorDetailsResponse, val filmsByProfession: Map<String, List<ActorFilm>> ): ScreenState
     data class ActorFilmsError(val message: String): ScreenState
 
 
@@ -97,6 +103,37 @@ class MoviesViewModel : ViewModel() {
     private val _errorMessage = MutableStateFlow<String?>(null)
     val errorMessage: StateFlow<String?> get() = _errorMessage
 
+    private val _searchFilmsState = MutableStateFlow<ScreenState>(ScreenState.Initial)
+    val searchFilmsState: StateFlow<ScreenState> get() = _searchFilmsState
+
+    private val _films = MutableStateFlow<List<MovieId>>(emptyList())
+    val films: StateFlow<List<MovieId>> get() = _films
+
+
+    fun searchFilms(keyword: String) {
+        _searchFilmsState.value = ScreenState.Loading  // Устанавливаем состояние загрузки
+        viewModelScope.launch {
+            try {
+                // Выполняем запрос к API
+                val response = KinopoiskApi.retrofitService.searchFilms(keyword)
+                if (response.films.isNotEmpty()) {
+                    // Преобразуем данные в MovieId
+                    val movies = response.films.map { it.toMovieId() }
+                    _films.value = movies
+                    _searchFilmsState.value = ScreenState.SuccessMovieId(movies)  // Новый успех с MovieId
+                } else {
+                    _searchFilmsState.value = ScreenState.Error("Нет фильмов по запросу: $keyword")  // Ошибка, если нет фильмов
+                }
+            } catch (e: Exception) {
+                _searchFilmsState.value = ScreenState.Error(e.message ?: "Ошибка загрузки данных")  // Обработка ошибки
+            }
+        }
+    }
+
+
+
+
+
     init {
         fetchMovies()
     }
@@ -110,6 +147,8 @@ class MoviesViewModel : ViewModel() {
             //fetchFamily()
         }
     }
+
+
 
     private suspend fun fetchPremieres(year: Int, month: String) {
         _premieresState.value = ScreenState.Loading
@@ -371,8 +410,6 @@ class MoviesViewModel : ViewModel() {
             }
         }
     }
-
-
 
 
 
