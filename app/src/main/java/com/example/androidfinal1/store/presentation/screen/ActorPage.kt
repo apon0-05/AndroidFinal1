@@ -129,7 +129,7 @@ fun ActorPage(actorId: Int?, navController: NavController) {
                         }
                     }
 
-                    SecTitle("Фильмография", "К списку", "44 фильма", navController, actor.personId)
+                    SecTitle("Фильмография", "К списку", "", navController, actor.personId)
                 }
             }
         }

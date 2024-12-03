@@ -19,7 +19,9 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.IconButton
 import androidx.compose.material.Text
+import androidx.compose.material.TopAppBar
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -31,6 +33,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -38,6 +41,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil.compose.rememberImagePainter
+import com.example.androidfinal1.R
 import com.example.androidfinal1.store.data.remote.ActorFilm
 import com.example.androidfinal1.store.presentation.components.FilmographyTopBar
 import com.example.androidfinal1.store.presentation.viewmodel.MoviesViewModel
@@ -58,7 +62,6 @@ fun Filmography(actorId: Int?, navController: NavController
 
     val actorDetailsState = viewModel.actorDetailsState.collectAsState()
     val selectedProfession = remember { mutableStateOf<String?>(null) }
-    val movies = viewModel.moviesactor.collectAsState()
 
 
 
@@ -81,7 +84,10 @@ fun Filmography(actorId: Int?, navController: NavController
             is ScreenState.ActorFilmsSuccess -> {
                 val actor = state.actor
                 val filmsByProfession = state.filmsByProfession
-                val professionTabs = filmsByProfession.keys.toList()
+                val professionTabs = filmsByProfession.map { (profession, films) ->
+                    profession to films.size
+                }
+
 
                 Column(
                     modifier = Modifier.fillMaxSize()
@@ -136,7 +142,7 @@ fun Filmography(actorId: Int?, navController: NavController
 }
 
 @Composable
-fun FilmList(tabs: List<String>, selectedTab: String?, onTabSelected: (String) -> Unit){
+fun FilmList(tabs: List<Pair<String?, Int>>, selectedTab: String?, onTabSelected: (String) -> Unit){
     LazyRow(
         modifier = Modifier
             .fillMaxWidth()
@@ -144,16 +150,17 @@ fun FilmList(tabs: List<String>, selectedTab: String?, onTabSelected: (String) -
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         items(tabs) { tab ->
+            val (profession, count) = tab
             Box(
                 modifier = Modifier
                     .clip(RoundedCornerShape(20.dp))
-                    .background(if (selectedTab == tab) Color.Blue else Color(0xFFF2F2F2))
-                    .clickable { onTabSelected(tab) }
+                    .background(if (selectedTab == profession) Color.Blue else Color(0xFFF2F2F2))
+                    .clickable { profession?.let { onTabSelected(it) } }
                     .padding(horizontal = 16.dp, vertical = 8.dp)
             ) {
                 Text(
-                    text = tab,
-                    color = if (selectedTab == tab) Color.White else Color.Black,
+                    text = "$profession $count",
+                    color = if (selectedTab == profession) Color.White else Color.Black,
                     style = TextStyle(fontSize = 14.sp, fontWeight = FontWeight.Medium)
                 )
             }
@@ -179,7 +186,7 @@ fun FilmItem(movie: ActorFilm, onClick: () -> Unit){
             Log.d("FilmItem", "Poster URL: ${movie.posterUrl}")
             Image(
 
-                painter = rememberImagePainter(data = movie.posterUrl),
+                painter = rememberImagePainter(data = movie.posterUrl), // Подставьте корректный URL
                 contentDescription = "Постер фильма",
                 contentScale = ContentScale.Crop,
                 modifier = Modifier.matchParentSize()
@@ -218,12 +225,13 @@ fun FilmItem(movie: ActorFilm, onClick: () -> Unit){
             )
             Spacer(modifier = Modifier.height(4.dp))
             Text(
-                text = movie.description ?: "Нет описания",
+                text = "${movie.year ?: "Неизвестно"}, ${movie.genres ?: "Неизвестно"}",
                 style = TextStyle(
                     fontSize = 14.sp,
                     color = Color.Gray
                 )
             )
+
         }
     }
 }

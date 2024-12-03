@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -19,11 +20,20 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.material.rememberBottomSheetState
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.SheetValue
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -42,6 +52,8 @@ import com.example.androidfinal1.store.data.remote.Actor
 import com.example.androidfinal1.store.data.remote.Movie
 import com.example.androidfinal1.store.data.remote.MovieId
 import com.example.androidfinal1.store.presentation.components.ItemView
+import com.example.androidfinal1.store.presentation.components.room.FilmDBViewModel
+//import com.example.androidfinal1.store.presentation.components.room.FilmViewModel
 import com.example.androidfinal1.store.presentation.viewmodel.MoviesViewModel
 import com.example.androidfinal1.store.presentation.viewmodel.ScreenState
 
@@ -58,8 +70,9 @@ import com.example.androidfinal1.store.presentation.viewmodel.ScreenState
 //}
 
 @Composable
-fun FilmPage(movieId: Int?, navController: NavController) {
+fun FilmPage(movieId: Int?, navController: NavController, movieViewModel: FilmDBViewModel) { //filmViewModel: FilmViewModel
     val viewModel: MoviesViewModel = viewModel()
+
 
     LaunchedEffect(movieId) {
         movieId?.let {
@@ -123,7 +136,7 @@ fun FilmPage(movieId: Int?, navController: NavController) {
 //                verticalArrangement = Arrangement.spacedBy(16.dp)
 //            ) {
                                 item {
-                                    MovieInfo(movie, navController)
+                                    MovieInfo(movie, navController, movieViewModel) //filmViewModel
                                 }
                                 item {
                                     Description(movie)
@@ -184,8 +197,16 @@ fun FilmPage(movieId: Int?, navController: NavController) {
 
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MovieInfo(movie: MovieId, navController: NavController) {
+fun MovieInfo(movie: MovieId, navController: NavController, movieViewModel: FilmDBViewModel) { //filmViewModel: FilmViewModel
+    var showBottomSheet by remember { mutableStateOf(false) }
+    val sheetState = rememberModalBottomSheetState(
+        skipPartiallyExpanded = false,
+    )
+
+
+
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -244,22 +265,53 @@ fun MovieInfo(movie: MovieId, navController: NavController) {
             Row(
                 horizontalArrangement = Arrangement.spacedBy(13.dp)
             ) {
-                IconsHolder(R.drawable.icons)
-                IconsHolder(R.drawable.icons2)
-                IconsHolder(R.drawable.icons3)
-                IconsHolder(R.drawable.icons4)
-                IconsHolder(R.drawable.icons5)
+                IconsHolder(
+                    img = R.drawable.icons,
+                    movie = movie,
+                    onClick = { movie.id?.let {
+                        Log.d("MovieClickFavourite", "Clicked movie ID: ${movie.id}")}
+                        movieViewModel.addToFavorites(movie)
+                        Log.d("MovieClickFavourite", "this id movie added to favFilms: ${movie.id}")
+                    }
+
+                )
+                IconsHolder(
+                    img = R.drawable.icons2,
+                    movie = movie,
+                    onClick = { movie.id?.let { movieViewModel.addToWatchLater(movie) }
+                        Log.d("MovieClickWatchLater", "this id movie added to watchlater: ${movie.id}")
+                    }
+                )
+                IconsHolder(img = R.drawable.icons3,  movie = movie,  onClick = {
+                    movieViewModel.deleteAllFilms()
+                })
+                IconsHolder(img = R.drawable.icons4, movie = movie,  onClick = {})
+                IconsHolder(img = R.drawable.icons5,  movie = movie,  onClick = {showBottomSheet = true }) //viewModel = filmViewModel,
             }
+            if (showBottomSheet) {
+                ModalBottomSheet(
+                    modifier = Modifier.fillMaxHeight(),
+                    sheetState = sheetState,
+                    onDismissRequest = { showBottomSheet = false }
+                ) {
+                    Text(
+                        "Swipe up to open sheet. Swipe down to dismiss.",
+                        modifier = Modifier.padding(16.dp)
+                    )
+                }
+            }
+
 
         }
     }
 }
 
 @Composable
-fun IconsHolder(img: Int) {
+fun IconsHolder(img: Int,  movie: MovieId,  onClick: (Int) -> Unit) { //viewModel: FilmViewModel
     Box(
         modifier = Modifier
             .size(25.dp)
+            .clickable { movie.id?.let { onClick(it) } }
     ) {
         Image(
             painter = painterResource(id = img),
@@ -267,6 +319,7 @@ fun IconsHolder(img: Int) {
             modifier = Modifier.fillMaxSize(),
             colorFilter = ColorFilter.tint(Color.White)
         )
+
     }
 }
 

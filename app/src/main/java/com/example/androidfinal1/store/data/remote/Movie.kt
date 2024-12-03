@@ -85,7 +85,9 @@ data class ActorFilm(
     @SerializedName("rating") val rating: String?,
     @SerializedName("description") val description: String?,
     @SerializedName("professionKey") val professionKey: String?,
-    var posterUrl: String? = null
+    var posterUrl: String? = null,
+    var year: Int? = null, // Новый параметр
+    var genres: String? = null
 )
 data class Genre(
     @SerializedName("genre") val name: String

@@ -45,6 +45,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavType
@@ -52,28 +54,75 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import androidx.room.Room
+import com.example.androidfinal1.store.presentation.screen.Filmography
 import com.example.androidfinal1.store.presentation.components.ItemView
+import com.example.androidfinal1.store.presentation.components.room.FilmDBViewModel
+import com.example.androidfinal1.store.presentation.components.room.MovieDatabase
+//import com.example.androidfinal1.store.presentation.components.room.AppDatabase
+//import com.example.androidfinal1.store.presentation.components.room.FilmViewModel
 import com.example.androidfinal1.store.presentation.screen.ActorPage
 import com.example.androidfinal1.store.presentation.navigation.BottomNavigationBar
 import com.example.androidfinal1.store.presentation.screen.CategoryScreen
 //import com.example.androidfinal1.store.presentation.FilmDetailPage
 import com.example.androidfinal1.store.presentation.screen.FilmPage
-import com.example.androidfinal1.store.presentation.screen.Filmography
 import com.example.androidfinal1.store.presentation.screen.Gallery
 import com.example.androidfinal1.store.presentation.screen.NewHomePage
 import com.example.androidfinal1.store.presentation.navigation.Screen
+import com.example.androidfinal1.store.presentation.screen.FavouritePage
+//import com.example.androidfinal1.store.presentation.screen.FavoriteFilmsPage
+import com.example.androidfinal1.store.presentation.screen.ProfilePage
 import com.example.androidfinal1.store.presentation.screen.SearchPage
+//import com.example.androidfinal1.store.presentation.screen.SearchPage
 import com.example.androidfinal1.store.presentation.screen.SearchPreferences
+import com.example.androidfinal1.store.presentation.screen.WanttiwatchPage
 import com.example.androidfinal1.store.presentation.viewmodel.MoviesViewModel
 import com.example.androidfinal1.store.presentation.viewmodel.ScreenState
 import com.example.androidfinal1.ui.theme.AndroidFinal1Theme
 
+
+
 class MainActivity : ComponentActivity() {
+//    private val db by lazy {
+//        Room.databaseBuilder(
+//            applicationContext,
+//            MovieDatabase::class.java,
+//            "movies.db"
+//        ).build()
+//    }
+    private val db by lazy{
+        Room.databaseBuilder(
+            applicationContext, MovieDatabase::class.java,
+            "movies.db"
+        ).fallbackToDestructiveMigration()  // Это позволит удалить старую базу и создать новую
+            .build()
+    }
+
+    private val movieViewModel: FilmDBViewModel by viewModels {
+        object : ViewModelProvider.Factory {
+            override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                return FilmDBViewModel(db.movieDao()) as T
+            }
+        }
+    }
+
+
     private val viewModel: MoviesViewModel by viewModels()
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+//        val database = Room.databaseBuilder(
+//            applicationContext,
+//            AppDatabase::class.java,
+//            "films_database"
+//        ).build()
+//
+//        val filmDao = database.filmDao()
+      //  val filmViewModel = ViewModelProvider(this, FilmViewModelFactory(filmDao)).get(FilmViewModel::class.java)
+
         setContent {
             AndroidFinal1Theme {
                 val navController = rememberNavController()
@@ -96,7 +145,7 @@ class MainActivity : ComponentActivity() {
                         }
                         composable("filmDetail/{id}") { backStackEntry ->
                             val movieId = backStackEntry.arguments?.getString("id")?.toIntOrNull()
-                                FilmPage(movieId = movieId,  navController)
+                                FilmPage(movieId = movieId,  navController, movieViewModel) //filmViewModel
 
                         }
                         composable("actorDetail/{id}") { backStackEntry ->
@@ -118,12 +167,18 @@ class MainActivity : ComponentActivity() {
                             Filmography(actorId = actorId, navController = navController)
                         }
                         composable(Screen.Search.route) {
-                            SearchPage(viewModel, navController)
+                            SearchPage( viewModel ,navController)
                         }
                         composable("search_preferences") {
                             SearchPreferences(navController)
                         }
-                        composable(Screen.Profile.route) { ProfilePage(navController) }
+                        composable(Screen.Profile.route) { ProfilePage(viewModel, navController, movieViewModel) } //filmViewModel
+                        composable("favoriteMoviesScreen") {
+                            FavouritePage(viewModel = movieViewModel, navController = navController)
+                        }
+                        composable("wanttowatchScreen"){
+                            WanttiwatchPage(viewModel = movieViewModel, navController = navController)
+                        }
                     }
                 }
             }
@@ -140,7 +195,3 @@ class MainActivity : ComponentActivity() {
 //fun SearchPage(navController: NavController){
 //
 //}
-
-@Composable
-fun ProfilePage(navController: NavController) {
-}

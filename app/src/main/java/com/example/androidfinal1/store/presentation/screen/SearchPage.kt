@@ -49,7 +49,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
+
 import androidx.navigation.NavController
 import coil.compose.rememberImagePainter
 import com.example.androidfinal1.R
@@ -60,7 +60,7 @@ import com.example.androidfinal1.store.presentation.viewmodel.MoviesViewModel
 import com.example.androidfinal1.store.presentation.viewmodel.ScreenState
 
 @Composable
-fun SearchPage(viewModel: MoviesViewModel = hiltViewModel(), navController: NavController) {
+fun SearchPage(viewModel: MoviesViewModel, navController: NavController) {
     val query = remember { mutableStateOf("") }
     val searchFilmsState by viewModel.searchFilmsState.collectAsState()
 

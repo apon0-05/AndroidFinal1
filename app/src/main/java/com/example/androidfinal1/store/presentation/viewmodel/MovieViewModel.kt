@@ -1,12 +1,11 @@
 package com.example.androidfinal1.store.presentation.viewmodel
 
-import androidx.compose.runtime.mutableStateOf
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.androidfinal1.store.data.remote.Actor
 import com.example.androidfinal1.store.data.remote.ActorDetailsResponse
 import com.example.androidfinal1.store.data.remote.ActorFilm
-import com.example.androidfinal1.store.data.remote.Film
 import com.example.androidfinal1.store.data.remote.ImageItem
 import com.example.androidfinal1.store.data.remote.KinopoiskApi
 import com.example.androidfinal1.store.data.remote.Movie
@@ -36,7 +35,7 @@ sealed interface ScreenState {
 
 
     object ActorFilmsLoading: ScreenState
-    data class ActorFilmsSuccess(val actor: ActorDetailsResponse, val filmsByProfession: Map<String, List<ActorFilm>> ): ScreenState
+    data class ActorFilmsSuccess(val actor: ActorDetailsResponse, val filmsByProfession: Map<String?, List<ActorFilm>>): ScreenState
     data class ActorFilmsError(val message: String): ScreenState
 
 
@@ -300,32 +299,32 @@ class MoviesViewModel : ViewModel() {
             }
         }
     }
-
-    private fun fetchFilmDetails(films: List<ActorFilm>?) {
-        viewModelScope.launch {
-            _movies.value = emptyList()
-            if (films.isNullOrEmpty()) return@launch
-
-            try {
-                val movieDetails = films.mapNotNull { actorFilm ->
-                    try {
-                        actorFilm.filmId?.let { movieId ->
-                            val movie = KinopoiskApi.retrofitService.getMovieDetails(movieId)
-                            movie.posterUrl?.let {
-                                movie.copy(posterUrl = it)
-                            }
-                        }
-                    } catch (e: Exception) {
-                        null
-                    }
-                }
-
-                _movies.value = movieDetails
-            } catch (e: Exception) {
-                _movies.value = emptyList()
-            }
-        }
-    }
+//
+//    private fun fetchFilmDetails(films: List<ActorFilm>?) {
+//        viewModelScope.launch {
+//            _movies.value = emptyList()
+//            if (films.isNullOrEmpty()) return@launch
+//
+//            try {
+//                val movieDetails = films.mapNotNull { actorFilm ->
+//                    try {
+//                        actorFilm.filmId?.let { movieId ->
+//                            val movie = KinopoiskApi.retrofitService.getMovieDetails(movieId)
+//                            movie.posterUrl?.let {
+//                                movie.copy(posterUrl = it)
+//                            }
+//                        }
+//                    } catch (e: Exception) {
+//                        null
+//                    }
+//                }
+//
+//                _movies.value = movieDetails
+//            } catch (e: Exception) {
+//                _movies.value = emptyList()
+//            }
+//        }
+//    }
 
 
 
@@ -345,17 +344,60 @@ class MoviesViewModel : ViewModel() {
         }
     }
 
+
+    private fun fetchFilmDetails(films: List<ActorFilm>?) {
+        viewModelScope.launch {
+            try {
+                Log.d("fetchFilmDetails", "Fetching details for films: ${films?.map { it.filmId }}")
+                val movieDetails = films?.mapNotNull { film ->
+                    try {
+                        KinopoiskApi.retrofitService.getMovieDetails(film.filmId) // Ваш метод
+                    } catch (e: Exception) {
+                        Log.e("fetchFilmDetails", "Error fetching film: ${film.filmId}", e)
+                        null
+                    }
+                }
+                if (movieDetails != null) {
+                    _movies.value = movieDetails
+                }
+                Log.d("fetchFilmDetails", "Movies fetched: ${_movies.value.size}")
+            } catch (e: Exception) {
+                Log.e("fetchFilmDetails", "Error fetching films", e)
+            }
+        }
+    }
+
     fun getActorDetailsFilmPo(actorId: Int) {
         viewModelScope.launch {
             _actorDetailsState.value = ScreenState.ActorFilmsLoading
             try {
-                val response = KinopoiskApi.retrofitService.getActorDetails(actorId)
+                // Загружаем данные об актере
+                val actorDetails = KinopoiskApi.retrofitService.getActorDetails(actorId)
 
-                val filmsByProfession = processFilmsByProfession(response)
+                // Группируем фильмы по профессии
+                val filmsByProfession = actorDetails.films?.groupBy { it.professionKey } ?: emptyMap()
+
+                // Загрузка подробной информации о фильмах для каждой профессии
+                val enrichedFilmsByProfession = filmsByProfession.mapValues { (_, films) ->
+                    films.map { film ->
+                        val details = fetchMovieDetails(film.filmId) // Загрузка всех данных фильма
+                        film.copy(
+                            posterUrl = details?.posterUrl,
+                            nameRu = details?.nameRu ?: film.nameRu,
+                            nameEn = details?.title ?: film.nameEn,
+                            description = details?.description,
+                            rating = details?.rating?.toString(),
+                            professionKey = film.professionKey
+                        ).apply {
+                            year = details?.year
+                            genres = details?.genres?.joinToString(", ") { it.name }?: ""
+                        }
+                    }
+                }
 
                 _actorDetailsState.value = ScreenState.ActorFilmsSuccess(
-                    actor = response,
-                    filmsByProfession = filmsByProfession
+                    actor = actorDetails,
+                    filmsByProfession = enrichedFilmsByProfession
                 )
             } catch (e: Exception) {
                 _actorDetailsState.value = ScreenState.ActorFilmsError("Ошибка загрузки данных актера")
@@ -363,54 +405,14 @@ class MoviesViewModel : ViewModel() {
         }
     }
 
-
-    private fun fetchFilmsOfActor(films: List<ActorFilm>?) {
-        viewModelScope.launch {
-            _moviesactor.value = emptyList()
-
-            if (films.isNullOrEmpty()) return@launch
-
-            try {
-                val updatedFilms = films.mapNotNull { actorFilm ->
-                    try {
-                        actorFilm.filmId?.let { movieId ->
-                            val movie = KinopoiskApi.retrofitService.getMovieDetails(movieId)
-                            actorFilm.posterUrl = movie.posterUrl
-                            actorFilm
-                        }
-                    } catch (e: Exception) {
-                        null
-                    }
-                }
-
-                _moviesactor.value = updatedFilms
-            } catch (e: Exception) {
-                _moviesactor.value = emptyList()
-            }
+    private suspend fun fetchMovieDetails(filmId: Int): MovieId? {
+        return try {
+            KinopoiskApi.retrofitService.getMovieDetails(filmId)
+        } catch (e: Exception) {
+            Log.e("fetchMovieDetails", "Ошибка загрузки данных фильма $filmId", e)
+            null
         }
     }
-
-
-
-    fun fetchActorFilms(actorId: Int) {
-        viewModelScope.launch {
-            try {
-                val personDetails = KinopoiskApi.retrofitService.getActorDetails(actorId)
-                val filmsWithPosters = personDetails.films?.map { film ->
-                    val filmDetails = KinopoiskApi.retrofitService.getMovieDetails(film.filmId)
-                    film.copy(
-                        posterUrl = filmDetails.posterUrl,
-                        nameRu = filmDetails.nameRu,
-                    )
-                } ?: emptyList()
-
-                _actorFilms.value = filmsWithPosters.groupBy { it.professionKey ?: "Unknown" }
-            } catch (e: Exception) {
-                _errorMessage.value = "Failed to fetch actor films: ${e.message}"
-            }
-        }
-    }
-
 
 
 }

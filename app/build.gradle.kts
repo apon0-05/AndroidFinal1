@@ -1,6 +1,9 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+    id("kotlin-kapt")
+
+
 }
 
 android {
@@ -80,11 +83,6 @@ dependencies {
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
     implementation("io.coil-kt:coil-compose:2.0.0")
 
-    implementation("com.google.dagger:hilt-android:2.46.1")
-//    kapt("com.google.dagger:hilt-android-compiler:2.46.1")
-
-    // Use the merged ViewModel dependency
-    implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
 
     // Kotlin Coroutines dependencies
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
@@ -95,6 +93,15 @@ dependencies {
     implementation ("androidx.compose.ui:ui-tooling-preview:1.5.1")
     implementation ("androidx.navigation:navigation-compose:2.7.3")
     implementation ("androidx.compose.material3:material3:1.2.0")
-    implementation ("androidx.compose.material3:material3:1.1.1")
 
+    implementation ("androidx.room:room-runtime:2.5.2")
+    kapt ("androidx.room:room-compiler:2.5.2")
+    implementation ("androidx.room:room-ktx:2.5.2")
+
+    // Compose
+
+    implementation (libs.androidx.lifecycle.viewmodel.compose)
+    implementation (libs.androidx.runtime.livedata)
+
+    implementation ("org.jetbrains.kotlin:kotlin-stdlib:1.9.0")
 }
