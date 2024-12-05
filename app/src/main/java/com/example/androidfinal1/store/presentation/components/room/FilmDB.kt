@@ -18,3 +18,12 @@ data class MovieEntity(
     val isFavorite: Boolean = false,
     val isWatchLater: Boolean = false
 )
+
+@Entity(tableName = "viewed_movies")
+data class ViewedMovie(
+    @PrimaryKey val id: Int,
+    val nameRu: String?,
+    val posterUrl: String?,
+    val rating: Double,
+    val year: Int?,
+)

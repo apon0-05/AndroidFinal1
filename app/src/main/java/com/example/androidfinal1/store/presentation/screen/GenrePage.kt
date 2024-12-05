@@ -1,5 +1,6 @@
 package com.example.androidfinal1.store.presentation.screen
 
+import com.example.androidfinal1.store.presentation.screen.search.FilterViewModel
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -15,18 +16,22 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import com.example.androidfinal1.R
 import kotlinx.coroutines.delay
 
-@Preview(showBackground = true)
+
 @Composable
-fun GenrePage() {
+fun GenrePage(navController: NavController, filterViewModel: FilterViewModel = viewModel()) {
     var searchQuery by remember { mutableStateOf("") }
-    var selectedGenre by remember { mutableStateOf<String?>(null) }
+
     var genres by remember { mutableStateOf<List<String>>(emptyList()) }
+
+    val filters by filterViewModel.filters.collectAsState()
+    val selectedGenre = filters.genre
 
     val allGenres = listOf("Комедия", "Мелодрама", "Боевик", "Вестерн", "Драма")
 
@@ -63,7 +68,7 @@ fun GenrePage() {
                 contentDescription = "Back",
                 modifier = Modifier
                     .size(13.dp)
-                    .clickable { }
+                    .clickable { navController.popBackStack()  }
             )
             Spacer(modifier = Modifier.width(115.dp))
             Text(
@@ -97,7 +102,9 @@ fun GenrePage() {
                         genre = genre,
                         isSelected = genre == selectedGenre,
                         onClick = {
-                            selectedGenre = genre
+                            filterViewModel.updateGenre(genre)
+                            navController.popBackStack() // Возвращаемся на предыдущую страницу после выбора
+
                         }
                     )
                 }

@@ -8,6 +8,8 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -49,6 +51,8 @@ fun ProfilePage(viewModel: MoviesViewModel, navController: NavController, filmVi
     val watchLaterMoviesCount by filmViewModel.watchLaterMoviesCount.collectAsState(0)
     Log.d("ProfilePage", "watchLater movies count: $watchLaterMoviesCount")
 
+    val viewedMovies by filmViewModel.viewedMoviesuwu.collectAsState(initial = emptyList())
+
 
 
 
@@ -77,12 +81,35 @@ fun ProfilePage(viewModel: MoviesViewModel, navController: NavController, filmVi
             ){
                 LazyColumn(verticalArrangement = Arrangement.spacedBy(25.dp)) {
                     item {
-                        CategorySection(
-                            title = "Просмотрено",
-                            state = premieresState,
-                            onClickSeeAll = { navController.navigate("category/premieres") },
-                            onClickMovie = { movieId -> navController.navigate("filmDetail/$movieId") }
+                        Text(
+                            text = "История просмотров",
+                            style = MaterialTheme.typography.headlineSmall,
+                            modifier = Modifier.padding(horizontal = 16.dp)
                         )
+                        }
+                    item{
+                        LazyRow(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(200.dp)
+                                .padding(horizontal = 16.dp),
+                            horizontalArrangement = Arrangement.spacedBy(20.dp)
+                        ) {
+                            items(viewedMovies) { movie ->
+                                ItemViewUwUU(
+                                    movie = movie,
+                                    onClick = {
+                                        navController.navigate("filmDetail/${movie.id}")
+                                    }
+                                )
+                            }
+                            item {
+                                DeleteButton(
+                                    delete = {filmViewModel.clearHistory()}
+                                )
+                            }
+                        }
+
                     }
                     item {
                         Column (
@@ -262,7 +289,7 @@ fun CategorySection(
 }
 
 @Composable
-fun DeleteButton(onShowAll: () -> Unit){
+fun DeleteButton(delete: () -> Unit){
     Box(){
         Box(
             modifier = Modifier.size(width = 130.dp, height = 194.dp)
@@ -284,7 +311,7 @@ fun DeleteButton(onShowAll: () -> Unit){
 
             ){
                 Button(
-                    onClick = onShowAll,
+                    onClick = delete,
                     shape = CircleShape,
                     colors = ButtonDefaults.buttonColors(containerColor = Color.White),
                     contentPadding = PaddingValues(0.dp),

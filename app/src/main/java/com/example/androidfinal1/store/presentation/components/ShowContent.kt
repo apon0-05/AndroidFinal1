@@ -30,10 +30,12 @@ import androidx.compose.ui.unit.dp
 fun ShowContent(
     modifier: Modifier = Modifier,
     tabs: List<String>, // Список вкладок
-    title: String
+    title: String,
+    selectedTab: String, // Текущая выбранная вкладка
+    onTabSelected: (String) -> Unit // Обработчик выбора вкладки
 ) {
     // Состояние для хранения текущей выбранной вкладки
-    val selectedTab = remember { mutableStateOf(tabs.first()) }
+    //val selectedTab = remember { mutableStateOf(tabs.first()) }
 
     Column(
         modifier = modifier
@@ -58,14 +60,14 @@ fun ShowContent(
                     modifier = Modifier
                         .weight(1f)
                         .clip(RoundedCornerShape(20.dp))
-                        .background(if (selectedTab.value == tab) Color.Blue else Color.White)
-                        .clickable { selectedTab.value = tab }
+                        .background(if (selectedTab == tab) Color.Blue else Color.White)
+                        .clickable {onTabSelected(tab) }
                         .padding(vertical = 8.dp),
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
                         text = tab,
-                        color = if (selectedTab.value == tab) Color.White else Color.Black,
+                        color = if (selectedTab == tab) Color.White else Color.Black,
                         fontWeight = FontWeight.Bold
                     )
                 }

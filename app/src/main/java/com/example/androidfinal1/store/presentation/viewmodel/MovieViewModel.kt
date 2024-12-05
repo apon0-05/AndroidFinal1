@@ -12,8 +12,10 @@ import com.example.androidfinal1.store.data.remote.Movie
 import com.example.androidfinal1.store.data.remote.MovieId
 import com.example.androidfinal1.store.data.remote.SimilarFilmItem
 import com.example.androidfinal1.store.data.remote.toMovieId
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.launch
 
 sealed interface ScreenState {
@@ -27,6 +29,7 @@ sealed interface ScreenState {
     data class FilmError(val message: String) : ScreenState
 
     data class SuccessMovieId(val movies: List<MovieId>) : ScreenState
+   // data class SuccessMovieId(val movies: List<MovieId>) : ScreenState
 
 
     object ActorLoading: ScreenState
@@ -108,23 +111,93 @@ class MoviesViewModel : ViewModel() {
     private val _films = MutableStateFlow<List<MovieId>>(emptyList())
     val films: StateFlow<List<MovieId>> get() = _films
 
+    private val searchQueryFlow = MutableSharedFlow<String>(replay = 1)  // SharedFlow для запроса
 
-    fun searchFilms(keyword: String) {
-        _searchFilmsState.value = ScreenState.Loading  // Устанавливаем состояние загрузки
+    private val _moviesState = MutableStateFlow<ScreenState>(ScreenState.Initial)
+    val moviesState: StateFlow<ScreenState> get() = _moviesState
+
+    private val _filters = MutableStateFlow<FilterOptions>(FilterOptions()) // Стейт для фильтров
+    val filters: StateFlow<FilterOptions> get() = _filters
+
+    // Запрос фильмов с учетом фильтров
+    fun searchFilteredFilms(
+        countries: List<Int>?,
+        genres: List<Int>?,
+        yearFrom: Int,
+        yearTo: Int,
+        ratingFrom: Float,
+        ratingTo: Float,
+        order: String,
+        type: String,
+        page: Int
+    ) {
+        _moviesState.value = ScreenState.Loading  // Устанавливаем состояние загрузки
+
         viewModelScope.launch {
             try {
-                // Выполняем запрос к API
-                val response = KinopoiskApi.retrofitService.searchFilms(keyword)
-                if (response.films.isNotEmpty()) {
-                    // Преобразуем данные в MovieId
-                    val movies = response.films.map { it.toMovieId() }
-                    _films.value = movies
-                    _searchFilmsState.value = ScreenState.SuccessMovieId(movies)  // Новый успех с MovieId
+                val response = KinopoiskApi.retrofitService.searchFilms(
+                    countries = countries?.joinToString(","),
+                    genres = genres?.joinToString(","),
+                    yearFrom = yearFrom,
+                    yearTo = yearTo,
+                    ratingFrom = ratingFrom,
+                    ratingTo = ratingTo,
+                    order = order,
+                    type = type,
+                    page = page
+                )
+                if (response.items.isNotEmpty()) {
+                    //_moviesState.value = ScreenState.SuccessMovieId(response.items.map { it.toMovieId() })
                 } else {
-                    _searchFilmsState.value = ScreenState.Error("Нет фильмов по запросу: $keyword")  // Ошибка, если нет фильмов
+                    _moviesState.value = ScreenState.Error("Фильмов не найдено по данному запросу.")
                 }
             } catch (e: Exception) {
-                _searchFilmsState.value = ScreenState.Error(e.message ?: "Ошибка загрузки данных")  // Обработка ошибки
+                _moviesState.value = ScreenState.Error(e.message ?: "Ошибка загрузки данных")
+            }
+        }
+    }
+
+    // Функция для обновления фильтров
+    fun updateFilters(filters: FilterOptions) {
+        _filters.value = filters
+    }
+
+
+    init {
+        viewModelScope.launch {
+            searchQueryFlow
+                .debounce(500)  // 500ms debounce
+                .collect { query ->
+                    searchFilms(query)
+                }
+        }
+    }
+
+    fun onQueryChange(query: String) {
+        viewModelScope.launch {
+            searchQueryFlow.emit(query)
+        }
+    }
+
+    fun searchFilms(keyword: String) {
+        if (keyword.isEmpty()) {
+            _searchFilmsState.value = ScreenState.Initial
+            return
+        }
+
+        _searchFilmsState.value = ScreenState.Loading
+        viewModelScope.launch {
+            try {
+                val response = KinopoiskApi.retrofitService.searchFilms(keyword)
+                if (response.films.isNotEmpty()) {
+                    val movies = response.films.map { it.toMovieId() }
+                    _films.value = movies
+                    _searchFilmsState.value = ScreenState.SuccessMovieId(movies)
+                } else {
+                    _searchFilmsState.value = ScreenState.Error("Нет фильмов по запросу: $keyword")
+                }
+            } catch (e: Exception) {
+                _searchFilmsState.value = ScreenState.Error(e.message ?: "Ошибка загрузки данных")
             }
         }
     }
@@ -196,23 +269,6 @@ class MoviesViewModel : ViewModel() {
         }
 
     }
-
-
-//    fun getFilmDetails(movieId: String) {
-//        viewModelScope.launch {
-//            _filmDetailsState.value = ScreenState.FilmLoading
-//            try {
-//                val response = KinopoiskApi.retrofitService.getMovieDetails(movieId)
-//                if (response.isSuccessful) {
-//                    _filmDetailsState.value = ScreenState.FilmSuccess(response.body() ?: Movie())
-//                } else {
-//                    _filmDetailsState.value = ScreenState.FilmError("Failed to load movie details")
-//                }
-//            } catch (e: Exception) {
-//                _filmDetailsState.value = ScreenState.FilmError("Error loading movie details")
-//            }
-//        }
-//    }
 
 
 
@@ -299,42 +355,6 @@ class MoviesViewModel : ViewModel() {
             }
         }
     }
-//
-//    private fun fetchFilmDetails(films: List<ActorFilm>?) {
-//        viewModelScope.launch {
-//            _movies.value = emptyList()
-//            if (films.isNullOrEmpty()) return@launch
-//
-//            try {
-//                val movieDetails = films.mapNotNull { actorFilm ->
-//                    try {
-//                        actorFilm.filmId?.let { movieId ->
-//                            val movie = KinopoiskApi.retrofitService.getMovieDetails(movieId)
-//                            movie.posterUrl?.let {
-//                                movie.copy(posterUrl = it)
-//                            }
-//                        }
-//                    } catch (e: Exception) {
-//                        null
-//                    }
-//                }
-//
-//                _movies.value = movieDetails
-//            } catch (e: Exception) {
-//                _movies.value = emptyList()
-//            }
-//        }
-//    }
-
-
-
-    fun processFilmsByProfession(actorResponse: ActorDetailsResponse): Map<String, List<ActorFilm>> {
-        return actorResponse.films!!.map { film ->
-            val posterUrl = generatePosterUrl(film.posterUrl)
-            film.copy(posterUrl = posterUrl)
-        }.groupBy { it.professionKey.toString() }
-    }
-
 
     fun generatePosterUrl(posterPath: String?): String? {
         return if (posterPath != null) {
@@ -416,3 +436,15 @@ class MoviesViewModel : ViewModel() {
 
 
 }
+
+// Класс для хранения фильтров
+data class FilterOptions(
+    val countries: List<Int> = emptyList(),
+    val genres: List<Int> = emptyList(),
+    val yearFrom: Int = 1000,
+    val yearTo: Int = 3000,
+    val ratingFrom: Float = 0f,
+    val ratingTo: Float = 10f,
+    val order: String = "RATING",
+    val type: String = "ALL"
+)

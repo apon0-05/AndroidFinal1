@@ -43,6 +43,7 @@ import androidx.compose.ui.unit.sp
 import coil.compose.rememberImagePainter
 import com.example.androidfinal1.R
 import com.example.androidfinal1.store.data.remote.Movie
+import com.example.androidfinal1.store.presentation.components.room.ViewedMovie
 
 @Composable
 fun FavouritePage(
@@ -147,7 +148,81 @@ fun MovieCard(movie: MovieEntity, onClick: () -> Unit) {
 
 @Composable
 fun ItemViewUwU(
-    movie: MovieEntity,
+    movie: MovieEntity ,
+    //onItemClick: (String) -> Unit,
+    onClick: (Int) -> Unit
+    //isLastItem: Boolean,
+
+) {
+    Box(
+        modifier = Modifier
+        //     .clickable { onItemClick(movie.id.toString()) }
+    ) {
+        Column(
+            modifier = Modifier.clickable { movie.id?.let { onClick(it) } }
+        ) {
+
+            movie.posterUrl?.let { posterUrl ->
+                Box(
+                    modifier = Modifier
+                        .size(width = 130.dp, height = 194.dp)
+                        .clip(RoundedCornerShape(10.dp))
+                        .clickable { movie.id?.let { onClick(it)} /* action */ } //movie.id?.let { onClick(it)}
+
+                ) {
+                    Image(
+                        painter = rememberImagePainter(data = posterUrl),
+                        contentDescription = "Movie Poster",
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier.matchParentSize()
+                    )
+                    Box(
+                        modifier = Modifier
+                            .align(Alignment.TopEnd)
+                            .padding(8.dp)
+                            .size(width = 24.dp, height = 16.dp)
+                            .background(
+                                Color.Blue,
+                                RoundedCornerShape(4.dp)
+                            ),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = movie.rating?.toString() ?: "0.0",
+                            fontSize = 9.sp,
+                            color = Color.White,
+                        )
+                    }
+                }
+
+            }
+            Text(
+                text = movie.nameRu ?: "",
+                fontSize = 20.sp,
+                color = Color.Black,
+                maxLines = 2,
+                overflow = TextOverflow.Ellipsis,
+                modifier = Modifier
+                    .width(130.dp)
+                    .padding(top = 5.dp)
+
+            )
+
+
+        }
+
+
+    }
+
+
+}
+
+
+
+
+@Composable
+fun ItemViewUwUU(
+    movie: ViewedMovie ,
     //onItemClick: (String) -> Unit,
     onClick: (Int) -> Unit
     //isLastItem: Boolean,

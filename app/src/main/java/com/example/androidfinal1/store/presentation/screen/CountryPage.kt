@@ -1,5 +1,7 @@
 package com.example.androidfinal1.store.presentation.screen
 
+import android.util.Log
+import com.example.androidfinal1.store.presentation.screen.search.FilterViewModel
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -15,18 +17,21 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import com.example.androidfinal1.R
 import kotlinx.coroutines.delay
 
-@Preview(showBackground = true)
+
 @Composable
-fun CountryPage() {
+fun CountryPage(navController: NavController, filterViewModel: FilterViewModel = viewModel()) {
     val countries = listOf("Россия", "Великобритания", "Германия", "США", "Франция")
+
+    val filters by filterViewModel.filters.collectAsState()
     var searchQuery by remember { mutableStateOf("") }
-    var selectedCountry by remember { mutableStateOf<String?>(null) }
+   // var selectedCountry by remember { mutableStateOf<String?>(null) }
 
     val filteredCountries = countries.filter {
         it.contains(searchQuery, ignoreCase = true)
@@ -48,7 +53,7 @@ fun CountryPage() {
                 contentDescription = "Back",
                 modifier = Modifier
                     .size(13.dp)
-                    .clickable { }
+                    .clickable {  navController.popBackStack() }
             )
             Spacer(modifier = Modifier.width(115.dp))
             Text(
@@ -78,17 +83,24 @@ fun CountryPage() {
                     modifier = Modifier.padding(16.dp)
                 )
             } else {
+                Log.d("CountyPage", "Country Clicked: ${filters.country}")
                 filteredCountries.forEach { country ->
                     CountryRow(
                         country = country,
-                        isSelected = country == selectedCountry,
+                        isSelected = country == filters.country,
+
                         onClick = {
-                            selectedCountry = country
+                            filterViewModel.updateCountry(country)
+                            Log.d("BeforeBack", "Country Clicked: ${filters.country}")
+                          //  navController.popBackStack()
                         }
+
                     )
                 }
+                Log.d("AfterBack", "Country Clicked: ${filters.country}")
             }
         }
+        Log.d("Goooo", "Country Clicked: ${filters.country}")
     }
 }
 

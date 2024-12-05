@@ -10,10 +10,6 @@ interface MovieDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun upsertMovie(movie: MovieEntity)
 
-//    @Delete
-//    suspend fun deleteMovie(movie: MovieEntity)
-
-
     @Query("DELETE FROM movies")
     fun deleteAllMovies()
 
@@ -36,4 +32,19 @@ interface MovieDao {
     @Query("DELETE FROM movies WHERE  isWatchLater = 1")
     fun deleteAllWatchLaterMovies()
 }
+
+@Dao
+interface ViewedMovieDao {
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun addViewedMovie(movie: ViewedMovie)
+
+    @Query("SELECT * FROM viewed_movies")
+    fun getViewedMovies(): Flow<List<ViewedMovie>>
+
+    @Query("DELETE FROM viewed_movies")
+    fun clearHistory()
+}
+
+
+
 

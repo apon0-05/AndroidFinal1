@@ -17,8 +17,43 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class FilmDBViewModel(
-    private val dao: MovieDao
+    private val dao: MovieDao,
+    private val viewedMovieDao: ViewedMovieDao
 ) : ViewModel() {
+
+    // Получаем фильмы из истории просмотров
+    val viewedMoviesuwu: Flow<List<ViewedMovie>> = viewedMovieDao.getViewedMovies()
+
+   // val viewedMoviesuwu = viewedMovieDao.getViewedMovies().stateIn(viewModelScope, SharingStarted.WhileSubscribed(), emptyList())
+
+    // Добавляем фильм в историю просмотров
+    fun addViewedMovie(movie: MovieId) {
+        viewModelScope.launch {
+            withContext(Dispatchers.IO){
+                try{
+                    viewedMovieDao.addViewedMovie(movie.toEntity())
+                }catch (e: Exception){
+
+
+                }
+            }
+
+        }
+    }
+    fun clearHistory() {
+        viewModelScope.launch {
+            withContext(Dispatchers.IO){
+                try{
+                    viewedMovieDao.clearHistory()
+                }catch (e:Exception){
+
+                }
+            }
+
+        }
+    }
+
+
 
     val favoriteMovies = dao.getFavoriteMovies().stateIn(viewModelScope, SharingStarted.WhileSubscribed(), emptyList())
     val watchLaterMovies = dao.getWatchLaterMovies().stateIn(viewModelScope, SharingStarted.WhileSubscribed(), emptyList())
@@ -63,11 +98,23 @@ class FilmDBViewModel(
             id = this.id ?: 0,
             nameRu = this.nameRu,
             posterUrl = this.posterUrl,
-            rating = (this.rating ?: "0.0") as Double,
+            rating = this.rating ?: 0.0,
             year = this.year,
            // genres = this.genres.joinToString { it.name },
             isFavorite = isFavorite,
             isWatchLater = isWatchLater
+        )
+    }
+
+    private fun MovieId.toEntity(): ViewedMovie {
+        return ViewedMovie(
+            id = this.id ?: 0,
+            nameRu = this.nameRu,
+            posterUrl = this.posterUrl,
+            rating = this.rating ?: 0.0,
+            year = this.year,
+            // genres = this.genres.joinToString { it.name },
+
         )
     }
 
@@ -111,5 +158,5 @@ class FilmDBViewModel(
     }
 
 
-
 }
+

@@ -56,6 +56,7 @@ import com.example.androidfinal1.R
 import com.example.androidfinal1.store.presentation.components.FilmCard
 import com.example.androidfinal1.store.presentation.components.SearchBar
 import com.example.androidfinal1.store.presentation.components.ShowContent
+import com.example.androidfinal1.store.presentation.screen.search.FilterViewModel
 import com.example.androidfinal1.store.presentation.viewmodel.MoviesViewModel
 import com.example.androidfinal1.store.presentation.viewmodel.ScreenState
 
@@ -63,12 +64,16 @@ import com.example.androidfinal1.store.presentation.viewmodel.ScreenState
 fun SearchPage(viewModel: MoviesViewModel, navController: NavController) {
     val query = remember { mutableStateOf("") }
     val searchFilmsState by viewModel.searchFilmsState.collectAsState()
+    val r = "привет"
 
     LazyColumn {
         item {
             SearchBar(
                 query = query.value,
-                onQueryChange = { newQuery -> query.value = newQuery },
+                onQueryChange = { newQuery ->
+                    query.value = newQuery
+                    viewModel.onQueryChange(newQuery)  // Вызовите onQueryChange вместо непосредственно вызова searchFilms
+                },
                 onSearchClick = {
                     if (query.value.isNotEmpty()) {
                         viewModel.searchFilms(query.value)
@@ -77,7 +82,6 @@ fun SearchPage(viewModel: MoviesViewModel, navController: NavController) {
                 onPreferencesClick = {
                     navController.navigate("search_preferences")
                 }
-
             )
         }
 
@@ -90,15 +94,21 @@ fun SearchPage(viewModel: MoviesViewModel, navController: NavController) {
             }
             is ScreenState.SuccessMovieId -> {
                 val movies = (searchFilmsState as ScreenState.SuccessMovieId).movies
-                items(movies) { movie ->
-                    FilmCard(
-                        movie = movie,
-                        onClick = {
-                            // Переход на страницу фильма
-                            navController.navigate("filmDetail/${movie.id}")
-                        }
-                    )
+                if(movies.isEmpty()){
+                    item { Text("Ничего не найдено") }
                 }
+                else{
+                    items(movies) { movie ->
+                        FilmCard(
+                            movie = movie,
+                            onClick = {
+                                // Переход на страницу фильма
+                                navController.navigate("filmDetail/${movie.id}")
+                            }
+                        )
+                    }
+                }
+
             }
             else -> {
                 // Можно добавить другие состояния или пустой блок

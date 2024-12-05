@@ -89,12 +89,7 @@ data class ActorFilm(
     var year: Int? = null, // Новый параметр
     var genres: String? = null
 )
-data class Genre(
-    @SerializedName("genre") val name: String
-)
-data class Country(
-    @SerializedName("country") val country: String
-)
+
 
 
 
@@ -105,18 +100,85 @@ data class ZombieResponse(
     @SerializedName("items") val movies: List<Movie>
 )
 
+//data class AponSearchResponse(
+//    @SerializedName("films") val films: List<AponFilm>,
+//    @SerializedName("searchFilmsCountResult") val searchFilmsCountResult: Int
+//)
+//data class AponFilm(
+//    val filmId: Int,
+//    val nameRu: String,
+//    val nameEn: String,
+//    val type: String,
+//    val year: String,
+//    val description: String,
+//    val filmLength: String,
+//    val countries: List<Country>,
+//    val genres: List<Genre>,
+//    val rating: String,
+//    val ratingVoteCount: Int,
+//    val posterUrl: String,
+//    val posterUrlPreview: String
+//)
+
+data class Genre(
+    @SerializedName("genre") val name: String
+)
+data class Country(
+    @SerializedName("country") val country: String
+)
+
+
 data class FilmResponse(
     @SerializedName("searchFilmsCountResult") val searchFilmsCountResult: Int,
     @SerializedName("films") val films: List<Film>
 )
 
+data class MovieSearchResponse(
+    @SerializedName("total") val total: Int, // Общее количество фильмов по запросу
+    @SerializedName("totalPages") val totalPages: Int, // Общее количество страниц (для пагинации)
+    @SerializedName("items") val items: List<Movie> // Список фильмов
+)
+
+data class MovieSearch(
+    @SerializedName("kinopoiskId") val kinopoiskId: Int, // ID фильма на КиноПоиск
+    @SerializedName("imdbId") val imdbId: String, // IMDb ID
+    @SerializedName("nameRu") val nameRu: String, // Название на русском
+    @SerializedName("nameEn") val nameEn: String, // Название на английском
+    @SerializedName("nameOriginal") val nameOriginal: String, // Оригинальное название
+    val countries: List<Country>, // Список стран
+    val genres: List<Genre>, // Список жанров
+    val ratingKinopoisk: Double, // Рейтинг на КиноПоиск
+    val ratingImdb: Double, // Рейтинг на IMDb
+    val year: Int, // Год выпуска
+    val type: String, // Тип (фильм, сериал, и т.д.)
+    val posterUrl: String, // URL изображения постера
+    val posterUrlPreview: String // URL изображения постера для превью
+)
+
+fun MovieSearch.toMovieId(): MovieId {
+    return MovieId(
+        title = this.nameEn,
+        genres = this.genres, // Преобразование жанров
+        posterUrl = this.posterUrlPreview,
+        rating = this.ratingKinopoisk,
+        id = this.kinopoiskId,
+        nameRu = this.nameRu,
+        year = this.year,
+        ratingAgeLimits = null, // Здесь можно добавить логику, если нужно использовать рейтинг возрастных ограничений
+        countries = this.countries, // Преобразование стран
+        filmLength = null, // Здесь нужно добавить логику, если в Movie есть длина фильма
+        shortDescription = "", // Здесь можно добавить логику для краткого описания
+        description = "" // Для полного описания можно добавить логику
+    )
+}
+
 data class Film(
-    @SerializedName("kinopoiskId") val filmId: Int,
+    @SerializedName("filmId") val filmId: Int,
     @SerializedName("nameRu") val nameRu: String,
     @SerializedName("nameEn") val nameEn: String,
     @SerializedName("year") val year: String,
     @SerializedName("description") val description: String,
-    @SerializedName("ratingKinopoisk") val rating: String,
+    //@SerializedName("ratingKinopoisk") val rating: String,
     @SerializedName("posterUrlPreview") val posterUrl: String,
     @SerializedName("genres") val genres: List<Genre>
 
@@ -128,7 +190,7 @@ fun Film.toMovieId(): MovieId {
         title = this.nameRu,
         genres = this.genres,
         posterUrl = this.posterUrl,
-        rating = this.rating?.takeIf { it.isNotEmpty() }?.toDoubleOrNull() ?: 0.0,
+        rating = 0.0, //this.rating?.takeIf { it.isNotEmpty() }?.toDoubleOrNull() ?: 0.0,
         id = this.filmId,
         nameRu = this.nameRu,
         year = this.year.toIntOrNull() ?: 0,

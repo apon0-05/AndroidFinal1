@@ -1,5 +1,6 @@
 package com.example.androidfinal1
 
+import YearRangeSelectionScreen
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
@@ -69,13 +70,16 @@ import com.example.androidfinal1.store.presentation.screen.FilmPage
 import com.example.androidfinal1.store.presentation.screen.Gallery
 import com.example.androidfinal1.store.presentation.screen.NewHomePage
 import com.example.androidfinal1.store.presentation.navigation.Screen
+import com.example.androidfinal1.store.presentation.screen.CountryPage
 import com.example.androidfinal1.store.presentation.screen.FavouritePage
+import com.example.androidfinal1.store.presentation.screen.GenrePage
 //import com.example.androidfinal1.store.presentation.screen.FavoriteFilmsPage
 import com.example.androidfinal1.store.presentation.screen.ProfilePage
 import com.example.androidfinal1.store.presentation.screen.SearchPage
 //import com.example.androidfinal1.store.presentation.screen.SearchPage
 import com.example.androidfinal1.store.presentation.screen.SearchPreferences
 import com.example.androidfinal1.store.presentation.screen.WanttiwatchPage
+import com.example.androidfinal1.store.presentation.screen.search.FilterViewModel
 import com.example.androidfinal1.store.presentation.viewmodel.MoviesViewModel
 import com.example.androidfinal1.store.presentation.viewmodel.ScreenState
 import com.example.androidfinal1.ui.theme.AndroidFinal1Theme
@@ -83,13 +87,6 @@ import com.example.androidfinal1.ui.theme.AndroidFinal1Theme
 
 
 class MainActivity : ComponentActivity() {
-//    private val db by lazy {
-//        Room.databaseBuilder(
-//            applicationContext,
-//            MovieDatabase::class.java,
-//            "movies.db"
-//        ).build()
-//    }
     private val db by lazy{
         Room.databaseBuilder(
             applicationContext, MovieDatabase::class.java,
@@ -101,7 +98,7 @@ class MainActivity : ComponentActivity() {
     private val movieViewModel: FilmDBViewModel by viewModels {
         object : ViewModelProvider.Factory {
             override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                return FilmDBViewModel(db.movieDao()) as T
+                return FilmDBViewModel(db.movieDao(), db.viewedMovieDao()) as T
             }
         }
     }
@@ -113,16 +110,8 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        //applicationContext.deleteDatabase("movies.db")
         enableEdgeToEdge()
-//        val database = Room.databaseBuilder(
-//            applicationContext,
-//            AppDatabase::class.java,
-//            "films_database"
-//        ).build()
-//
-//        val filmDao = database.filmDao()
-      //  val filmViewModel = ViewModelProvider(this, FilmViewModelFactory(filmDao)).get(FilmViewModel::class.java)
-
         setContent {
             AndroidFinal1Theme {
                 val navController = rememberNavController()
@@ -179,15 +168,20 @@ class MainActivity : ComponentActivity() {
                         composable("wanttowatchScreen"){
                             WanttiwatchPage(viewModel = movieViewModel, navController = navController)
                         }
+                        composable("Страна"){
+                            CountryPage(navController)
+                        }
+                        composable("Жанр"){
+                            GenrePage(navController)
+                        }
+                        composable("Год"){
+                            YearRangeSelectionScreen(navController)
+                        }
                     }
                 }
             }
         }
 
-        // Uncomment and call these functions in your ViewModel as needed
-        // viewModel.fetchPremieres(2024, "JANUARY")
-        // viewModel.fetchCollections("TOP_POPULAR_MOVIES", 1)
-        // viewModel.fetchZombie("ZOMBIE_THEME", 1)
     }
 }
 

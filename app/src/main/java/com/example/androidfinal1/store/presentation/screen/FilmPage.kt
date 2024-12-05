@@ -205,6 +205,8 @@ fun MovieInfo(movie: MovieId, navController: NavController, movieViewModel: Film
         skipPartiallyExpanded = false,
     )
 
+    movieViewModel.addViewedMovie(movie)
+
 
 
     Box(
@@ -275,6 +277,7 @@ fun MovieInfo(movie: MovieId, navController: NavController, movieViewModel: Film
                     }
 
                 )
+
                 IconsHolder(
                     img = R.drawable.icons2,
                     movie = movie,
