@@ -123,6 +123,9 @@ class MainActivity : ComponentActivity() {
                         startDestination = Screen.Home.route,
                         Modifier.padding(innerPadding)
                     ) {
+
+                        val viewModel1: FilterViewModel = FilterViewModel()
+
                         composable(Screen.Home.route) {
                             NewHomePage(viewModel, navController)
                         }
@@ -155,11 +158,15 @@ class MainActivity : ComponentActivity() {
                             Log.d("actorINMain", "Clicked movie ID: ${actorId}")
                             Filmography(actorId = actorId, navController = navController)
                         }
+
+
+
                         composable(Screen.Search.route) {
-                            SearchPage( viewModel ,navController)
+                            SearchPage( viewModel ,navController, viewModel1)
                         }
+
                         composable("search_preferences") {
-                            SearchPreferences(navController)
+                            SearchPreferences(navController, viewModel1)
                         }
                         composable(Screen.Profile.route) { ProfilePage(viewModel, navController, movieViewModel) } //filmViewModel
                         composable("favoriteMoviesScreen") {
@@ -169,13 +176,13 @@ class MainActivity : ComponentActivity() {
                             WanttiwatchPage(viewModel = movieViewModel, navController = navController)
                         }
                         composable("Страна"){
-                            CountryPage(navController)
+                            CountryPage(navController, viewModel1)
                         }
                         composable("Жанр"){
-                            GenrePage(navController)
+                            GenrePage(navController, viewModel1)
                         }
                         composable("Год"){
-                            YearRangeSelectionScreen(navController)
+                            YearRangeSelectionScreen(navController, viewModel1)
                         }
                     }
                 }

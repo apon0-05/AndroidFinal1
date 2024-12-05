@@ -64,7 +64,7 @@ import com.example.androidfinal1.store.presentation.viewmodel.ScreenState
 fun SearchPage(viewModel: MoviesViewModel, navController: NavController) {
     val query = remember { mutableStateOf("") }
     val searchFilmsState by viewModel.searchFilmsState.collectAsState()
-    val r = "привет"
+//    val filters by filterViewModel.filters.collectAsState()
 
     LazyColumn {
         item {
@@ -76,7 +76,7 @@ fun SearchPage(viewModel: MoviesViewModel, navController: NavController) {
                 },
                 onSearchClick = {
                     if (query.value.isNotEmpty()) {
-                        viewModel.searchFilms(query.value)
+                        viewModel.searchFilms(query.value, filters)
                     }
                 },
                 onPreferencesClick = {
