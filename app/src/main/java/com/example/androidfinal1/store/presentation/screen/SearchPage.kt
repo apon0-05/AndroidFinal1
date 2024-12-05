@@ -76,7 +76,7 @@ fun SearchPage(viewModel: MoviesViewModel, navController: NavController) {
                 },
                 onSearchClick = {
                     if (query.value.isNotEmpty()) {
-                        viewModel.searchFilms(query.value, filters)
+                        viewModel.searchFilms(query.value)
                     }
                 },
                 onPreferencesClick = {

@@ -162,7 +162,7 @@ class MainActivity : ComponentActivity() {
 
 
                         composable(Screen.Search.route) {
-                            SearchPage( viewModel ,navController, viewModel1)
+                            SearchPage( viewModel ,navController)
                         }
 
                         composable("search_preferences") {
