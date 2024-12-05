@@ -108,9 +108,9 @@ fun CountryPage(navController: NavController, filterViewModel: FilterViewModel =
 fun CountrySearchBar(query: String, onQueryChange: (String) -> Unit, hintText: String) {
     var debouncedQuery by remember { mutableStateOf(query) }
 
-    // Debounce mechanism
+
     LaunchedEffect(query) {
-        delay(500) // 500ms debounce delay
+        delay(500)
         debouncedQuery = query
     }
 
@@ -139,7 +139,7 @@ fun CountrySearchBar(query: String, onQueryChange: (String) -> Unit, hintText: S
                 decorationBox = { innerTextField ->
                     if (query.isEmpty()) {
                         Text(
-                            text = hintText, // Display custom hint text
+                            text = hintText,
                             style = TextStyle(fontSize = 18.sp, color = Color.Gray)
                         )
                     }

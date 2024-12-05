@@ -10,11 +10,11 @@ import kotlinx.coroutines.launch
 data class Filters(
     val country: String? = null,
     val genre: String? = null,
-    val startYear: Int? = null,  // Новый параметр для начального года
-    val endYear: Int? = null,    // Новый параметр для конечного года
+    val startYear: Int? = null,
+    val endYear: Int? = null,
     val ratingRange: Pair<Float, Float>? = null,
-    val sortBy: String = "Дата", // Default sorting
-    val showType: String = "Все" // Default show type
+    val sortBy: String = "Дата",
+    val showType: String = "Все"
 )
 class FilterViewModel : ViewModel() {
 
@@ -33,13 +33,13 @@ class FilterViewModel : ViewModel() {
             _filters.emit(_filters.value.copy(genre = genre))
         }
     }
-    // Обновление начального года
+
     fun updateStartYear(startYear: Int) {
         viewModelScope.launch {
             _filters.emit(_filters.value.copy(startYear = startYear))
         }
     }
-    // Обновление конечного года
+
     fun updateEndYear(endYear: Int) {
         viewModelScope.launch {
             _filters.emit(_filters.value.copy(endYear = endYear))

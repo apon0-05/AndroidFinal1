@@ -39,11 +39,11 @@ import com.example.androidfinal1.store.presentation.components.room.MovieEntity
 
 @Composable
 fun WanttiwatchPage(
-    viewModel: FilmDBViewModel, // Получаем ViewModel
+    viewModel: FilmDBViewModel,
     navController: NavController
 ){
 
-    // Получаем список любимых фильмов из ViewModel
+
     val wanttoWatchMovies by viewModel.watchLaterMovies.collectAsState(initial = emptyList())
 
     Column(
@@ -95,7 +95,6 @@ fun WanttiwatchPage(
             ) {
                 items(wanttoWatchMovies) { movie ->
                     ItemViewUwU(movie = movie, onClick = {
-                        // Переход на страницу с деталями фильма
                          navController.navigate("filmDetail/${movie.id}")
                     })
                 }

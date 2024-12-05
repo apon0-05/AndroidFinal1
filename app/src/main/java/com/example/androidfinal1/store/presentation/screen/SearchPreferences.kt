@@ -78,7 +78,7 @@ fun SearchPreferences(navController: NavController, filterViewModel: FilterViewM
                 title = "Показывать",
                 selectedTab = filters.showType,
                 onTabSelected = { selectedTab ->
-                    filterViewModel.updateShowType(selectedTab) // Обновление через ViewModel
+                    filterViewModel.updateShowType(selectedTab)
                 }
             )
         }
@@ -109,7 +109,7 @@ fun SearchPreferences(navController: NavController, filterViewModel: FilterViewM
                 title = "Сортировать",
                 selectedTab = filters.sortBy,
                 onTabSelected = { selectedTab ->
-                    filterViewModel.updateSortBy(selectedTab) // Обновление через ViewModel
+                    filterViewModel.updateSortBy(selectedTab)
                 }
             )
         }
@@ -153,9 +153,9 @@ fun CustomDivider(modifier: Modifier = Modifier) {
 fun RangeSliderExample(filterViewModel: FilterViewModel) {
     val filters by filterViewModel.filters.collectAsState()
 
-    var sliderValues by remember { mutableStateOf(1f..10f) } // Диапазон значений слайдера
+    var sliderValues by remember { mutableStateOf(1f..10f) }
 
-    // Обновляем ratingRange в ViewModel, когда ползунок изменяется
+
     val onSliderValueChange = { newValues: ClosedFloatingPointRange<Float> ->
         sliderValues = newValues
         filterViewModel.updateRatingRange(newValues.start to newValues.endInclusive)
@@ -171,12 +171,12 @@ fun RangeSliderExample(filterViewModel: FilterViewModel) {
             value = sliderValues,
             onValueChange = { newValues ->
                 sliderValues = newValues
-                // Обновление диапазона рейтинга в ViewModel
+
                 filterViewModel.updateRatingRange(newValues.start to newValues.endInclusive)
             },
-            valueRange = 1f..10f, // Диапазон значений слайдера от 1 до 10
+            valueRange = 1f..10f,
             steps = 0,
-            onValueChangeFinished = { /* Действия после завершения изменения */ },
+            onValueChangeFinished = {  },
             colors = SliderDefaults.colors(
                 thumbColor = Color.White,
                 activeTrackColor = Color.Blue,
@@ -186,7 +186,7 @@ fun RangeSliderExample(filterViewModel: FilterViewModel) {
         )
 
 
-        // Отображаем значения ползунков
+
         Row(
             modifier = Modifier
                 .fillMaxWidth()

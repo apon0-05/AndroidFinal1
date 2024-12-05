@@ -14,7 +14,7 @@ data class MovieEntity(
     val posterUrl: String?,
     val rating: Double,
     val year: Int?,
-   // val genres: String, // Сохраняем как JSON-строку
+   // val genres: String,
     val isFavorite: Boolean = false,
     val isWatchLater: Boolean = false
 )

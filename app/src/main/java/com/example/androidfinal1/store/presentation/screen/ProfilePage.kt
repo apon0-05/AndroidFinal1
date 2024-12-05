@@ -44,7 +44,7 @@ fun ProfilePage(viewModel: MoviesViewModel, navController: NavController, filmVi
     val premieresState by viewModel.premieresState.collectAsState()
     val popularMoviesState by viewModel.popularMoviesState.collectAsState()
 
-    val favoriteMoviesCount by filmViewModel.favoriteMoviesCount.collectAsState(0)  // Начальное значение 0
+    val favoriteMoviesCount by filmViewModel.favoriteMoviesCount.collectAsState(0)
     Log.d("ProfilePage", "Favorite movies count: $favoriteMoviesCount")
 
 
@@ -167,7 +167,7 @@ fun ProfilePage(viewModel: MoviesViewModel, navController: NavController, filmVi
                                         name = "Русское кино",
                                         itemCount = 105,
                                         icon = Icons.Default.Person,
-                                        modifier = Modifier.weight(1f) // Равный размер с карточками сверху
+                                        modifier = Modifier.weight(1f)
                                             .aspectRatio(1f),
                                         onClick = {}, navController
                                     )

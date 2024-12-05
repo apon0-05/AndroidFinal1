@@ -529,7 +529,7 @@ fun SimilarMovies(filmId: Int) {
                             rating = null,
                             genres = emptyList()
                         ),
-                        onClick = { movieId -> /* Действие при клике на фильм */ }
+                        onClick = { movieId ->  }
                     )
                 }
             }

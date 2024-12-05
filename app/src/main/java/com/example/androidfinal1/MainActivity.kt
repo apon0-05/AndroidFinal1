@@ -91,7 +91,7 @@ class MainActivity : ComponentActivity() {
         Room.databaseBuilder(
             applicationContext, MovieDatabase::class.java,
             "movies.db"
-        ).fallbackToDestructiveMigration()  // Это позволит удалить старую базу и создать новую
+        ).fallbackToDestructiveMigration()
             .build()
     }
 
@@ -152,7 +152,7 @@ class MainActivity : ComponentActivity() {
 
                         }
                         composable("actorFilms/{actorId}",
-                            arguments = listOf(navArgument("actorId") { type = NavType.IntType }) // Указываем, что actorId — это Int
+                            arguments = listOf(navArgument("actorId") { type = NavType.IntType })
                         ) { backStackEntry ->
                             val actorId = backStackEntry.arguments?.getInt("actorId")
                             Log.d("actorINMain", "Clicked movie ID: ${actorId}")

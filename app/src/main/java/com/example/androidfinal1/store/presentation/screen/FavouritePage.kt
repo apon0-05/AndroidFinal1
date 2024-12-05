@@ -167,7 +167,7 @@ fun ItemViewUwU(
                     modifier = Modifier
                         .size(width = 130.dp, height = 194.dp)
                         .clip(RoundedCornerShape(10.dp))
-                        .clickable { movie.id?.let { onClick(it)} /* action */ } //movie.id?.let { onClick(it)}
+                        .clickable { movie.id?.let { onClick(it)}  } //movie.id?.let { onClick(it)}
 
                 ) {
                     Image(

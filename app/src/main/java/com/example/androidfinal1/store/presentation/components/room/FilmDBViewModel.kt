@@ -21,12 +21,11 @@ class FilmDBViewModel(
     private val viewedMovieDao: ViewedMovieDao
 ) : ViewModel() {
 
-    // Получаем фильмы из истории просмотров
     val viewedMoviesuwu: Flow<List<ViewedMovie>> = viewedMovieDao.getViewedMovies()
 
    // val viewedMoviesuwu = viewedMovieDao.getViewedMovies().stateIn(viewModelScope, SharingStarted.WhileSubscribed(), emptyList())
 
-    // Добавляем фильм в историю просмотров
+
     fun addViewedMovie(movie: MovieId) {
         viewModelScope.launch {
             withContext(Dispatchers.IO){
@@ -119,7 +118,6 @@ class FilmDBViewModel(
     }
 
 
-    // Метод для удаления всех фильмов
     fun deleteAllFilms() {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
@@ -136,7 +134,7 @@ class FilmDBViewModel(
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
                 try {
-                    dao.deleteAllFavoriteMovies() // Удаляет только любимые фильмы
+                    dao.deleteAllFavoriteMovies()
                 } catch (e: Exception) {
                     Log.e("FilmDBViewModel", "Error deleting favorite films: ${e.message}")
                 }

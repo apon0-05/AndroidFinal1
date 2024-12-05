@@ -43,7 +43,6 @@ import com.example.androidfinal1.store.presentation.viewmodel.ScreenState
 
 @Composable
 fun NewHomePage(viewModel: MoviesViewModel, navController: NavController) {
-    // Собираем данные из ViewModel
     val premieresState by viewModel.premieresState.collectAsState()
     val popularMoviesState by viewModel.popularMoviesState.collectAsState()
     val zombieMoviesState by viewModel.zombieMoviesState.collectAsState()
@@ -115,7 +114,7 @@ fun NewHomePage(viewModel: MoviesViewModel, navController: NavController) {
                                                 , onClick = {
                                                 id ->
                                                 Log.d("MovieClick", "Clicked movie ID: ${movie.id}")
-                                                // Переход на экран с деталями фильма, передавая ID фильма
+
                                                   navController.navigate("filmDetail/${movie.id}")
                                             })
                                         }

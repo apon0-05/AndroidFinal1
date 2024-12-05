@@ -96,7 +96,7 @@ fun CategoryScreen(categoryIndex: Int, navController: NavController) {
                         ItemView(movie)
                         { id ->
                             Log.d("MovieClick", "Clicked movie ID: ${movie.id}")
-                            // Переход на экран с деталями фильма, передавая ID фильма
+
                             navController.navigate("filmDetail/${movie.id}")
                         }
                     }

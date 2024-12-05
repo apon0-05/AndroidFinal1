@@ -72,7 +72,7 @@ fun SearchPage(viewModel: MoviesViewModel, navController: NavController) {
                 query = query.value,
                 onQueryChange = { newQuery ->
                     query.value = newQuery
-                    viewModel.onQueryChange(newQuery)  // Вызовите onQueryChange вместо непосредственно вызова searchFilms
+                    viewModel.onQueryChange(newQuery)
                 },
                 onSearchClick = {
                     if (query.value.isNotEmpty()) {
@@ -102,7 +102,6 @@ fun SearchPage(viewModel: MoviesViewModel, navController: NavController) {
                         FilmCard(
                             movie = movie,
                             onClick = {
-                                // Переход на страницу фильма
                                 navController.navigate("filmDetail/${movie.id}")
                             }
                         )
@@ -111,7 +110,7 @@ fun SearchPage(viewModel: MoviesViewModel, navController: NavController) {
 
             }
             else -> {
-                // Можно добавить другие состояния или пустой блок
+
             }
         }
 

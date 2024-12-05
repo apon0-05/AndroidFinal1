@@ -103,7 +103,7 @@ fun GenrePage(navController: NavController, filterViewModel: FilterViewModel = v
                         isSelected = genre == selectedGenre,
                         onClick = {
                             filterViewModel.updateGenre(genre)
-                            navController.popBackStack() // Возвращаемся на предыдущую страницу после выбора
+                            navController.popBackStack()
 
                         }
                     )
